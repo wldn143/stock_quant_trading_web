@@ -8,8 +8,9 @@ import HomePage from './pages/Home';
 import PopolPage from './pages/Popol';
 import SearchPage from './pages/Search';
 import LoginPage from './pages/Login';
+import SignupPage from './pages/SignUp';
 
-import NavBar from './component/layout/NavBar.js';
+
 
 
 
@@ -22,6 +23,8 @@ function App() {
       <Routes>
 
         <Route path='/' element={<LoginPage/>} />
+
+        <Route path='/signup' element={<SignupPage/>} />
 
         <Route path='/home' element={<HomePage/>} />
           
