@@ -1,0 +1,27 @@
+
+.box{
+    display: block;
+    margin: auto;
+    margin-top: 5rem;
+    border: 1px solid #D8D8D8;
+    height: 50rem;
+    width: 38rem;
+    border-radius: 1rem;
+}
+
+.name{
+    text-align: center;
+    margin-top: 10rem;
+    font-size: 2.5rem;
+}
+
+.btn{
+    margin-top: 10rem;
+    width: 50%;
+    margin-left: 9rem;
+    transition: filter 0.25s;
+}
+
+.btn:hover{
+    filter: brightness(80%);
+}
