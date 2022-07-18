@@ -11,18 +11,20 @@ import LoginPage from './pages/Login';
 
 import NavBar from './component/layout/NavBar.js';
 
+
+
 function App() {
   
 
   return (
-    <>
-      <NavBar/>
+    <> 
       
       <Routes>
+
         <Route path='/' element={<LoginPage/>} />
 
         <Route path='/home' element={<HomePage/>} />
-        
+          
         <Route path='/home/chart' element={<ChartPage/>} />
 
         <Route path='/home/balance' element={<BalancePage/>} />
@@ -33,7 +35,6 @@ function App() {
 
       </Routes>
       
-
     </>
     
   )

@@ -1,6 +1,12 @@
+import AfterLogin from "../component/layout/AfterLogin";
 
 function PopolPage(){
-    return <div> popol Page </div>
+    return <div> 
+        <AfterLogin>
+            popol Page 
+        </AfterLogin>
+
+    </div>
 }
 
 export default PopolPage;
