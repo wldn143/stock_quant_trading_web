@@ -1,5 +1,5 @@
-import MainChart from "../component/etc/MainChart";
-import Enjoysearch from "../component/etc/Enjoysearch";
+import MainChart from "../component/HomeElement/MainChart";
+import Enjoysearch from "../component/HomeElement/Enjoysearch";
 import AfterLogin from "../component/layout/AfterLogin";
 
 function HomePage(){
