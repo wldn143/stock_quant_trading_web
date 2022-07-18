@@ -2,26 +2,38 @@
 .box{
     display: block;
     margin: auto;
-    margin-top: 5rem;
+    margin-top: 100px;
     border: 1px solid #D8D8D8;
-    height: 50rem;
-    width: 38rem;
-    border-radius: 1rem;
+    height: 650px;
+    width: 500px;
+    border-radius: 10px;
 }
 
 .name{
     text-align: center;
-    margin-top: 10rem;
-    font-size: 2.5rem;
+    margin-top: 35%;
+    font-size: 30px;
 }
 
 .btn{
-    margin-top: 10rem;
-    width: 50%;
-    margin-left: 9rem;
+    margin-top: 15%;
+    width: 70%;
+    margin-left: 15%;
     transition: filter 0.25s;
 }
 
 .btn:hover{
     filter: brightness(80%);
+}
+
+@media(max-width: 800px), (max-height: 800px){
+    .box{
+        height: 500px;
+        width: 360px;
+    }
+
+    .name{
+        font-size: 22px;
+    }
+
 }
