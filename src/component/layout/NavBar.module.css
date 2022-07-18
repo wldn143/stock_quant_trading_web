@@ -53,13 +53,13 @@
     color: yellowgreen;
 }
 
-@media(max-width: 800px){     /* 화면 줄였을때, 메뉴리스트 드롭다운 버튼으로 변경 */
+@media(max-width: 50rem){     /* 화면 줄였을때, 메뉴리스트 드롭다운 버튼으로 변경 */
     .Menu{
         display: none;
     }
 
     .dropdown{
-        display: block;
+        display: inline-block;
         width: 30%;
     }
 
@@ -91,7 +91,7 @@
     }
 
     .dropdown:hover .dropbtn{
-        margin-top:190px;
+        margin-top:12rem;
         color: brown;
     }
 
