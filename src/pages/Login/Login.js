@@ -1,4 +1,4 @@
-import Loginlayout from "../component/LoginElement/Loginlayout";
+import Loginlayout from "../../component/LoginElement/Loginlayout";
 
 function LoginPage(){
     

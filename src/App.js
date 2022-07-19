@@ -7,8 +7,9 @@ import ChartPage from './pages/Chart';
 import HomePage from './pages/Home';
 import PopolPage from './pages/Popol';
 import SearchPage from './pages/Search';
-import LoginPage from './pages/Login';
-import SignupPage from './pages/SignUp';
+import LoginPage from './pages/Login/Login';
+import SigninPage from './pages/Login/Signin';
+import SignupPage from './pages/Login/Signup';
 
 
 
@@ -24,8 +25,10 @@ function App() {
 
         <Route path='/' element={<LoginPage/>} />
 
-        <Route path='/signup' element={<SignupPage/>} />
+        <Route path='/signin' element={<SigninPage/>} />
 
+        <Route path='/signup' element={<SignupPage/>} />
+        
         <Route path='/home' element={<HomePage/>} />
           
         <Route path='/home/chart' element={<ChartPage/>} />
