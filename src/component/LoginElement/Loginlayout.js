@@ -4,7 +4,7 @@ import classes from './Loginlayout.module.css';
 function Loginlayout(){
 
     const REST_API_KEY = "52750403fc68645f09dd49b6b777a752"
-    const REDIRECT_URI = "http://localhost:3000/signup"   
+    const REDIRECT_URI = "http://localhost:3000/signin"   
 
     const KAKAO_AUTH_URL = `https://kauth.kakao.com/oauth/authorize?response_type=code&client_id=${REST_API_KEY}&redirect_uri=${REDIRECT_URI}`;
 
