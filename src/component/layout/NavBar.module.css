@@ -46,11 +46,12 @@
 
 
 
-.NavBar a:hover,
-.NavBar a:active,
-.NavBar a.active{
+.NavBar li a:hover,
+.NavBar li a:active{
     color: yellowgreen;
 }
+
+
 
 @media(max-width: 50rem){     /* 화면 줄였을때, 메뉴리스트 드롭다운 버튼으로 변경 */
     .Menu{
@@ -71,10 +72,10 @@
         font-size: 1rem;
         color: white;
         background: rgba(44, 42, 39, 0.983);
-        border: none;
+        border-color: rgba(44, 42, 39, 0.983);
         margin-left:50%;
         
-        transition: color 0.25s;
+        transition: background-color 0.25s;
     }
 
     .dropdownList a{
@@ -87,12 +88,12 @@
         font-size: 1.5rem;
         height: 40px;
 
-        transition: background 1s;
+        transition: background-color 0.3s, border-color 0.3s;
     }
 
     .dropdown:hover .dropbtn{
         margin-top: 195px;
-        color: grey;
+        background-color: #a50e48;
     }
 
     .dropdown:hover .dropdownList{
@@ -102,8 +103,8 @@
     }
 
     .dropdownList a:hover{
-        background: grey;
-        color: black;
+        background-color: #a50e48;;
+        border-color :#a50e48;
     }
 }
 
