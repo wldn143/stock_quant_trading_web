@@ -11,7 +11,7 @@ function SignupPage(){
     
 
     return<>
-        {<Signuplayout />}
+        {<Signuplayout props={location}/>}
     </>
 }
 

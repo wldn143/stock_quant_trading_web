@@ -7,7 +7,7 @@ import {useNavigate} from 'react-router-dom';
 // form제출을 통해 서버에 사용자정보 제출, 제출후 별도의 조건문없이 홈페이지로 이동.(로그인으로 간주)
 
 
-function Signuplayout(props){
+function Signuplayout({props}){
 
     let navigate = useNavigate();
 
@@ -70,24 +70,24 @@ function Signuplayout(props){
         
             <section className={classes.inputsec}>
                 <label htmlFor='apikey'>API KEY</label>
-                <input type='number' required id="apikey" ref={apikeyInput}/>
+                <input type='text' required id="apikey" ref={apikeyInput}/>
             </section>
 
             <section className={classes.inputsec}>
                 <label htmlFor='secret'>SECRET</label>
-                <input type='number' required id="secret" ref={secretInput}/>
+                <input type='text' required id="secret" ref={secretInput}/>
             </section>
 
             <h2>  Account Info</h2>
             
             <section className={classes.inputsec}>
                 <label htmlFor='cano'>앞 8자리</label>
-                <input type='password' required id='cano' ref={canoInput}/>
+                <input type='number' required id='cano' ref={canoInput}/>
             </section>
 
             <section className={classes.inputsec}>
                 <label htmlFor='acnt'>뒤 2자리</label>
-                <input type='password' required id='acnt' ref={acntInput}/>
+                <input type='number' required id='acnt' ref={acntInput}/>
             </section>
 
             <section className={classes.inputsec}>
