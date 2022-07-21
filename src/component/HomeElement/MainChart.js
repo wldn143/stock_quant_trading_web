@@ -6,48 +6,121 @@ import classes from "./MainChart.module.css";
 
 function MainChart(){
 
-    return<div className={classes.component}>
-        <ul className={classes.frame1}>
-            <h2 > 주요지수 </h2>
-            <div className={classes.item}>
-                <div className={classes.itemDetail}>
-                    <h2>Kospi</h2>
-                    <h2 className={classes.itemPrice}>Price</h2>
-                </div>
-                
-                <div>
-                    차트
-                </div>
-            </div>
+    let arr = [];
 
-            <div className={classes.item}>
-                <div className={classes.itemDetail}>
+    // async function getPrice(code){    
+    //     let response = await fetch('http://haniumproject.com/getPrice',{
+    //         method: 'POST',
+    //         body: JSON.stringify({
+    //             'interval': 'YEAR',
+    //             'code': `${code}`,
+    //             'start': '2021'
+    //         }),
+    //         headers:{
+    //             'Content-Type': 'application/json'
+    //         }
+    //     })
+    //     let data = await response.json();
+    //     console.log(arr)
+    //     return data;
+    // }
+
+    
+
+    // function getPrice(){    
+    //     fetch('http://haniumproject.com/getPrice',{
+    //         method: 'POST',
+    //         body: JSON.stringify({
+    //             'interval': 'YEAR',
+    //             'code': 'KS11',
+    //             'start': '2021'
+    //         }),
+    //         headers:{
+    //             'Content-Type': 'application/json'
+    //         }
+    //     }).then(response => {response.json()})
+    //     .then((data) => console.log(data))
+        
+    // }
+
+    
+
+    
+
+
+    
+    
+
+    return<>
+        {/* <div className=classes.none>{arr.push(getPrice('KS11'))}</div>
+        <div className=classes.none>{arr.push(getPrice('KQ11'))}</div>  
+        <div className=classes.none>{arr.push(getPrice('USD/KRW'))}</div> */}
+        
+        
+        
+        
+        <section className={classes.frame1}>
+
+            
+
+            <section className={classes.firstblock}>
+                
+
+                <h2 className={classes.headline}> 주요지수 </h2>
+
+
+
+                <section className={classes.item}>
+                    <section className={classes.itemDetail}>
+                        <h2>Kospi</h2>
+                        <h2 className={classes.itemPrice}>Price</h2>
+                    </section>
+
+                    <section className={classes.chart}>
+                        
+                        Loading...
+                        
+                    </section>
+
+                </section>
+                    
+                    
+                
+
+            </section>
+
+
+            <section className={classes.item}>
+
+                <section className={classes.itemDetail}>
                     <h2>Kosdak</h2>
                     <h2 className={classes.itemPrice}>Price</h2>
-                </div>
+                </section>
                 
-                <div>
-                    차트
-                </div>
-            </div>
+                <section className={classes.chart}>
+                      Loading...
+                </section>
 
-            <div className={classes.item}>
-                <div className={classes.itemDetail}>
+            </section>
+
+
+            <section className={classes.item}>
+
+                <section className={classes.itemDetail}>
                     <h2>원/환율</h2>
                     <h2 className={classes.itemPrice}>Price</h2>
-                </div>
+                </section>
                 
-                <div>
-                    차트
-                </div>
-            </div>
+                <section className={classes.chart}>
+                    Loading...
+                </section>
 
-        </ul>
-        
+            </section>
 
-    </div>
-
-
+            
+            
+        </section>
+    </>
 }
 
 export default MainChart;

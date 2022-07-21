@@ -1,0 +1,57 @@
+
+
+.frame2{
+    display: flex;
+    margin-top: 50px;
+}
+
+
+
+.table {
+    border-collapse: collapse;
+    border: 1px solid #D8D8D8;
+    border-radius: 10px;
+    border-style: hidden;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+    overflow: hidden;
+
+    width: 400px;
+    height: 200px;
+    margin-left: 40px;
+    font-size: 15px;
+    font-family:sans-serif
+    
+}
+
+
+
+.thead{
+    height: 40px;
+}
+
+
+.thead tr{
+    border-bottom: 1px solid #a19a89;
+    background-color: #a19a89;
+    
+}
+
+.tbody tr{
+    border-bottom: 1px solid black;
+    
+    
+}
+
+.tbody tr:last-child{
+    border-bottom: none;
+}
+
+.tobject{
+    text-align: left;
+}
+
+
+
+
+
+
