@@ -81,7 +81,7 @@
     .dropdownList a{
         text-decoration: none;
         border-bottom: 1px solid black;
-        z-index: 0;         /* 곂치는 요소보다 우선순위 높게 가져감 */
+        z-index: 10;         /* 곂치는 요소보다 우선순위 높게 가져감 */
         color: white;
         background: rgba(44, 42, 39, 0.983);
         box-shadow: 10px 10px 5px grey;
