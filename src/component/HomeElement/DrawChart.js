@@ -15,6 +15,14 @@ function DrawChart({props}){
     const closeArr = [37000, 30000,30000, 50000, 20000, 15000, 80000, 30000,37000, 30000,30000, 50000, 20000, 15000, 80000, 30000]
 
 
+    /* 실제 데이터배열 받아오기 */
+    // const dateArr = props.date;
+    // const openArr = props.open;
+    // const highArr = props.high;
+    // const lowArr = props.low;
+    // const closeArr = props.close;
+
+
     for(let i = 0; i < dateArr.length; i++){
         totalArr.push([
             dateArr[i],
