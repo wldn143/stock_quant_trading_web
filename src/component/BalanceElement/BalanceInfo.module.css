@@ -1,0 +1,17 @@
+.table {
+    border-collapse: collapse;
+    width:80%;
+    height: 270px;
+    font-size: 17px;
+    border-top: 2.5px solid #000000;
+}
+
+.tbody tr{
+    border: 1px solid #dfdfdf;
+    border-left: none;
+    border-right:none;
+}
+
+.title{
+    width: 35%;    
+}
