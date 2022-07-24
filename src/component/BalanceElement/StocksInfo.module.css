@@ -1,0 +1,18 @@
+.table {
+    border-collapse: collapse;
+    width:80%;
+    font-size: 17px;
+    border-top: 2.5px solid #000000;
+}
+.thead{
+    height: 70px;
+    background-color: #F5F5F5;
+    font-weight: 100;
+}
+.tbody tr{
+    border: 1px solid #dfdfdf;
+    border-left: none;
+    border-right:none;
+    height: 70px;
+    text-align: center;
+}
