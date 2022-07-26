@@ -13,7 +13,7 @@ function SigninPage(){
     let navigate = useNavigate()
     
 
-    function authorizationHandler(e){
+    function authorizationHandler(){
         
 
         /* firebase 테스트용 fetch */
@@ -41,10 +41,15 @@ function SigninPage(){
             })
         }).then( response => response.json())
         .then( (data) => {
+            sessionStorage.setItem('uuid', data.uuid);
+            sessionStorage.setItem('name', data.name);
+
             if(data.registration === 0){
-                navigate('/home'), {state: uuid 
-                };
+                
+                navigate('/home')
+            
             }else if(data.registration === 1){
+                
                 navigate('/signup', {state: {
                     name: data.name,
                     uuid: data.uuid
