@@ -5,6 +5,7 @@ import DrawChart from "./DrawChart";
 
 import {useState, useEffect} from 'react';
 
+import Loading from "../layout/Loading";
 
 function MainChart(){
 
@@ -24,6 +25,9 @@ function MainChart(){
     //     close: closeArr
     // }
     
+    let [loading, setLoading] = useState(true);
+
+
     let [chartData1, setchartData1] = useState({    // 코스피 차트 데이터
         Open: {'keys':'values'},
         High: {'keys':'values'},
@@ -118,6 +122,7 @@ function MainChart(){
         .then(data => {
             setchartData1(data);
             
+            
         }) 
 
 
@@ -151,7 +156,7 @@ function MainChart(){
         }).then(response => {return response.json()})
         .then(data => {
             setchartData3(data);
-            
+            setLoading(false);
         }) 
         
     },[])
@@ -181,6 +186,8 @@ function MainChart(){
 
 
     return<>
+        {loading ? <Loading/> : 
+        
         
         
         <section className={classes.frame1}>
@@ -241,6 +248,11 @@ function MainChart(){
             
             
         </section>
+        
+        
+        }
+        
+        
     </>
 }
 
