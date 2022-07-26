@@ -1,17 +1,33 @@
-.table {
+.balancetable {
     border-collapse: collapse;
     width:80%;
     height: 270px;
     font-size: 17px;
     border-top: 2.5px solid #000000;
 }
-
-.tbody tr{
+.balancetbody tr{
     border: 1px solid #dfdfdf;
     border-left: none;
     border-right:none;
 }
-
 .title{
     width: 35%;    
+}
+.stocktable {
+    border-collapse: collapse;
+    width:80%;
+    font-size: 17px;
+    border-top: 2.5px solid #000000;
+}
+.stockthead{
+    height: 70px;
+    background-color: #F5F5F5;
+    font-weight: 100;
+}
+.stocktbody tr{
+    border: 1px solid #dfdfdf;
+    border-left: none;
+    border-right:none;
+    height: 70px;
+    text-align: center;
 }

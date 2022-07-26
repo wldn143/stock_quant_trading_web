@@ -1,7 +1,6 @@
 import AfterLogin from "../component/layout/AfterLogin";
 import styled from "styled-components";
 import BalanceInfo from "../component/BalanceElement/BalanceInfo"
-import StocksInfo from "../component/BalanceElement/StocksInfo"
 
 const Title=styled.div`
     width:25%;
@@ -10,7 +9,7 @@ const Title=styled.div`
 `
 const Contents=styled.div`
     width:75%;
-    margin-left: 40px;
+    margin-left: 20px;
 `
 const Layout=styled.div`
     display:flex;
@@ -28,7 +27,6 @@ function BalancePage(){
             </Title>
             <Contents>
             <BalanceInfo/>
-            <StocksInfo/>
             </Contents>
             </Layout>
         </AfterLogin> 

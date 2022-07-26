@@ -24,10 +24,18 @@ let dd={"state":1,
 "token":"eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ0b2tlbiIsImF1ZCI6ImNiMjkwMTFjLTVkYjUtNGExYi1hMTVjLTBmMGM5NDNlZDU5NSIsImlzcyI6InVub2d3IiwiZXhwIjoxNjU4OTExNjMxLCJpYXQiOjE2NTg4MjUyMzEsImp0aSI6IlBTU0FlYTNpTERiWmxEMklZOG14dGxNS1FhTzVWc2JoUUoySCJ9.kjRxVRbkC_XxTYSmfvD9THmpuPUx9uerIbxUWQP40dkyX7YT5RPFpifXAq-BT8hUNzw91Xc0IWvae0jdbNhx3Q",
 "code":1}
 
-    const[totalAssets, setTotalAssets]=useState();
+    const[totalAssets, setTotalAssets]=useState("");
     const[manageAssets, setManageAssets]=useState("");
     const[rateOfReturn, setRateOfReturn]=useState([]);
-
+    const[curAccount,setCurAccount]=useState([]);
+    const headerData = [
+        "종목",
+        "현재가",
+        "총단가",
+        "평단",
+        "수량",
+        "수익률",
+    ];
 //   useEffect(()=>{
 //     fetch("https://haniumproject.com/getUserAccount/{uuid}")
 //     .then((response) => response.json())
@@ -38,12 +46,14 @@ let dd={"state":1,
     setTotalAssets(dd.total)
     setManageAssets(dd.eval+' / '+dd.sumofprch)
     setRateOfReturn(parseFloat(dd.assticdcrt)*100)
-})
+    setCurAccount(dd.curaccount);
+},[])
 
 return(
-    <div style={{height:"350px"}}>
-        <table className={classes.table}>
-            <tbody className={classes.tbody}>
+    <>
+    <div style={{height:"320px"}}>
+        <table className={classes.balancetable}>
+            <tbody className={classes.balancetbody}>
                 <tr>
                     <td className={classes.title}>
                         총자산(원)
@@ -71,6 +81,35 @@ return(
             </tbody>
         </table>
     </div>
+        <div>
+        <p style={{fontSize:"22px", fontWeight:"600", }}>
+            상세자산정보
+            </p>
+            <table className={classes.stocktable}>
+            <thead className={classes.stockthead}>
+        <tr>
+          {headerData.map((item) => {
+            return <th key={headerData.indexOf(item)}>{item}</th>;
+          })}
+        </tr>
+      </thead>
+      <tbody className={classes.stocktbody}>
+        {curAccount.map((item) => {
+          return (
+            <tr key={item.prdt_name}>
+            <td>{item.prdt_name}</td>
+            <td>{item.prpr}</td>
+            <td>{item.evlu_amt}</td>
+            <td>{item.pchs_avg_pric}</td>
+            <td>{item.hldg_qty}</td>
+            <td>{(item.evlu_pfls_rt<0)? <p style={{color:"blue"}}>{item.evlu_pfls_rt}</p>:<p style={{color:"red"}}>{item.evlu_pfls_rt}</p>}</td>
+            </tr>
+          );
+        })}
+      </tbody>
+    </table>
+    </div>
+    </>
 )
 }
 export default BalanceInfo;
