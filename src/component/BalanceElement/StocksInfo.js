@@ -28,14 +28,14 @@ function StocksInfo(){
             <thead className={classes.thead}>
         <tr>
           {headerData.map((item) => {
-            return <th>{item}</th>;
+            return <th key={headerData.indexOf(item)}>{item}</th>;
           })}
         </tr>
       </thead>
-      <tbody tbody className={classes.tbody}>
+      <tbody className={classes.tbody}>
         {data.map((item) => {
           return (
-            <tr>
+            <tr key={item.stock}>
             <td>{item.stock}</td>
             <td>{item.currnetPrice}</td>
             <td>{item.totalPrice}</td>
