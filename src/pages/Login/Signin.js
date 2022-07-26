@@ -1,5 +1,7 @@
 
+import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import Loading from '../../component/layout/Loading';
 
 let authorizationCode = new URL(window.location.href).searchParams.get('code');
 /* URL에 있는 인가코드를 변수에 저장하는 로직. */
@@ -59,7 +61,6 @@ function SigninPage(){
         })    
         
 
-
         /* 서버통신 테스트 성공
         인가코드 서버로 전송 -> 응답데이터 registration 값으로 페이지 이도
         registration === 0 : 회원가입이 이미 완료된 회원. homepage로 이동
@@ -67,12 +68,16 @@ function SigninPage(){
         */
     }
 
+
+    useEffect(()=>{
+        authorizationHandler();
+    },[])
     
     
     
 
     return <>
-        {authorizationHandler()}
+        <Loading/>
     </>
 }
 
