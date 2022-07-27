@@ -2,7 +2,7 @@ import SearchBar from "./SearchBar";
 import classes from "./SelectStockForm.module.css"
 
 import {useState} from 'react';
-import Modal from "./Modal";
+import Modal from "./Modals/Modal";
 
 function SelectStockForm(){
 

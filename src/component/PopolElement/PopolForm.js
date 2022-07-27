@@ -1,7 +1,7 @@
 import {useState, useEffect} from 'react';
 import {useNavigate} from 'react-router-dom';
 import classes from './PopolForm.module.css';
-
+import ErrorModal from './Modals/ErrorModal';
 
 import styled from 'styled-components';
 
@@ -39,8 +39,10 @@ function PopolForm(){
 
     const navigate = useNavigate();
 
-    let [sttData, setsttData] = useState();
+    let [sttData, setsttData] = useState(null);
     let [Clicked, setClicked] = useState([0,0]);
+
+    let [OpenModal, setOpenModal] = useState(false);
     
 
     function selectstt1(e){
@@ -53,8 +55,17 @@ function PopolForm(){
         setClicked([0,1]);
     }
 
+    function CloseModal(){
+        setOpenModal(false);
+    }
+
     function submitHandler(e){
         e.preventDefault();
+
+        if(sttData === null){
+            setOpenModal(true);
+            return;
+        }
 
         fetch('https://stock-a95d6-default-rtdb.firebaseio.com/.json',{
             method:'POST',
@@ -65,6 +76,8 @@ function PopolForm(){
         }).then(navigate('/home/popol/select'))
         .catch()
     }
+
+    
 
    
 
@@ -97,7 +110,7 @@ function PopolForm(){
 
             </section>
 
-            
+            <ErrorModal open={OpenModal} close={CloseModal} main="전략을 선택하세요" header="error"></ErrorModal>
         </>
     )
 }
