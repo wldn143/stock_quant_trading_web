@@ -1,9 +1,10 @@
 import AfterLogin from "../../component/layout/AfterLogin";
+import SelectStockForm from "../../component/PopolElement/SelectStockForm";
 
 function SelectStockPage(){
     return <div> 
         <AfterLogin>
-            Select Page
+            <SelectStockForm/>
         </AfterLogin>
 
     </div>
