@@ -5,11 +5,12 @@ import {Route, Routes} from 'react-router-dom';
 import BalancePage from './pages/Balance';
 import ChartPage from './pages/Chart';
 import HomePage from './pages/Home';
-import PopolPage from './pages/Popol';
+import PopolPage from './pages/Popol/Popol';
 import SearchPage from './pages/Search';
 import LoginPage from './pages/Login/Login';
 import SigninPage from './pages/Login/Signin';
 import SignupPage from './pages/Login/Signup';
+import SelectStockPage from './pages/Popol/SelectStock';
 
 
 
@@ -36,6 +37,8 @@ function App() {
         <Route path='/home/balance' element={<BalancePage/>} />
 
         <Route path='/home/popol' element={<PopolPage/>} />
+
+        <Route path='/home/popol/select' element={<SelectStockPage/>} />
 
         <Route path='/home/search' element={<SearchPage/>} />
 
