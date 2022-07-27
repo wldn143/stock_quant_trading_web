@@ -1,32 +1,28 @@
 
 
 .frame1{
-    display: flex;
-    justify-content: space-between;
-    flex-wrap : wrap;
     margin-top: 50px;
-    
+    transition: ease all 1s
 }
 
 .none{
     display: none;
 }
+.header{
+    margin-left: 7%;
+}
 
 .item{
+    display:inline-block;
     border: 1px solid #D8D8D8;
     border-radius: 10px;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
-    margin-left: 140px;
+    margin-left: 7%;
+    margin-top: 20px;
+    
 }
 
-.firstblock{
-    display:flex;
-    flex-direction: row;
-}
 
-.firstblock .item{
-    margin-left: 50px;
-}
 
 .itemDetail{
     display: flex;
@@ -36,6 +32,26 @@
 
 .itemPrice{
     margin-left: 300px;
+    margin-right: 100px;
+}
+
+@media(min-width: 1720px){
+    .frame1{
+        margin-left: 0;
+    }
+    .item{
+        margin-left: 2%;
+    }
+    .header{
+        margin-left: 2%;
+    }
+}
+
+@media (max-width: 1400px){
+    .frame1{
+        margin-left: 15%;
+    }
+    
 }
 
 
