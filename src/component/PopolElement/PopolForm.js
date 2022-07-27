@@ -1,10 +1,35 @@
 import {useState, useEffect} from 'react';
 import {useNavigate} from 'react-router-dom';
+import classes from './PopolForm.module.css';
 
 
 import styled from 'styled-components';
 
-const selectButton=styled.button
+const SelectButton=styled.button`
+
+    border: 1px solid #D8D8D8;
+    border-radius: 10px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+    width: 500px;
+    transition: background-color 0.5s;
+    margin-top: 50px;
+
+    background-color: ${props => {
+        if(props.Clicked === 1){
+            return '#b39b9a';
+        }
+    }};
+
+    h3{
+        text-align: start;
+    }
+
+
+    &:hover{
+        background-color:#b39b9a;
+    }
+
+`
 
 
 
@@ -15,15 +40,17 @@ function PopolForm(){
     const navigate = useNavigate();
 
     let [sttData, setsttData] = useState();
-    
+    let [Clicked, setClicked] = useState([0,0]);
     
 
     function selectstt1(e){
         setsttData("stt1");
+        setClicked([1,0]);
     }
 
     function selectstt2(e){
         setsttData("stt2");
+        setClicked([0,1]);
     }
 
     function submitHandler(e){
@@ -44,18 +71,28 @@ function PopolForm(){
 
     return(
         <>
-            <selectButton></selectButton>
-            <section>
-                <selectButton  onClick={selectstt1}>
+            
+            <section className={classes.box}>
+
+
+                <h1> 사용하실 전략을 선택하세요 </h1>
+
+                <SelectButton Clicked={Clicked[0]} onClick={selectstt1}>
                     <h2>전략1</h2>
-                </selectButton>
+                    <h3>월간 수익률</h3>
+                    <h3>변동 </h3>
+                    <h3>Sharpe-Ratio</h3>
+                </SelectButton>
                 
-                <selectButton  onClick={selectstt2}>
+                <SelectButton Clicked={Clicked[1]} onClick={selectstt2}>
                     <h2>전략2</h2>
-                </selectButton>
+                    <h3>월간 수익률</h3>
+                    <h3>변동 </h3>
+                    <h3>Sharpe-Ratio</h3>
+                </SelectButton>
 
                 
-                <button onClick={submitHandler}>Submit</button>
+                <button className={classes.submitbtn} onClick={submitHandler}>다음 단계로</button>
                 
 
             </section>

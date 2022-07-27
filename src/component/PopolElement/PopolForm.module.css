@@ -1,0 +1,29 @@
+
+
+.box{
+    
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 50px;
+    
+}
+
+
+.submitbtn{
+    
+    font: inherit;
+    cursor: pointer;
+    background-color: rgba(44, 42, 39, 0.983);
+    color: white;
+    padding: 0.5rem 1.5rem;
+    border: 1px solid rgba(44, 42, 39, 0.983);
+    border-radius: 4px;
+    font-weight: bold;
+    margin-top: 50px;
+}
+
+.submitbtn:hover{
+    background-color: #a50e48;
+    border-color: #a50e48;
+}
