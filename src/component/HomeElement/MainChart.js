@@ -192,30 +192,27 @@ function MainChart(){
         
         <section className={classes.frame1}>
 
-            
-            <section className={classes.firstblock}>
-                
-
+            <section className={classes.header}>
                 <h2 className={classes.headline}> 주요지수 </h2>
-
-                <section className={classes.item}>
-                    <section className={classes.itemDetail}>
-                        <h2>Kospi</h2>
-                        <h2 className={classes.itemPrice}>Price</h2>
-                    </section>
-
-                    <section className={classes.chart}>
-                        
-                        {chartDataObj1 && <DrawChart props={chartDataObj1}/>}
-                        
-                    </section>
-
-                </section>
-                    
-                    
+            </section>
+            
+            
                 
+
+            <section className={classes.item}>
+                <section className={classes.itemDetail}>
+                    <h2>Kospi</h2>
+                    <h2 className={classes.itemPrice}>Price</h2>
+                </section>
+
+                <section className={classes.chart}>
+                    
+                    {chartDataObj1 && <DrawChart props={chartDataObj1}/>}
+                    
+                </section>
 
             </section>
+                    
 
 
             <section className={classes.item}>

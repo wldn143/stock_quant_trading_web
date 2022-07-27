@@ -1,13 +1,16 @@
 
 
 .frame2{
-    display: flex;
-    margin-top: 50px;
+    margin-top: 80px;
+    margin-left: 7%;
 }
 
 
-
+h2{
+    display: inline-block;
+}
 .table {
+    
     border-collapse: collapse;
     border: 1px solid #D8D8D8;
     border-radius: 10px;
@@ -17,7 +20,7 @@
 
     width: 400px;
     height: 200px;
-    margin-left: 40px;
+    margin-top: 10px;
     font-size: 15px;
     font-family:sans-serif
     
@@ -51,7 +54,19 @@
 }
 
 
+@media(min-width: 1720px){
+    .frame2{
+        margin-left: 2%;
+    }
+    
+}
 
 
+@media (max-width: 1400px){
+    .frame2{
+        margin-left: 20%;
+    }
+    
+}
 
 
