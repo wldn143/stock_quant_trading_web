@@ -1,0 +1,93 @@
+.Errormodal {
+    display: none;
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    z-index: 99;
+    background-color: rgba(0, 0, 0, 0.6);
+}
+
+
+.Errormodalbox {
+    width: 90%;
+    max-width: 450px;
+    margin: 0 auto;
+    border-radius: 0.3rem;
+    background-color: #fff;
+    animation: modal-show 0.3s;
+    overflow: hidden;
+}
+
+
+.Errormodalheader {
+    position: relative;
+    padding: 16px 64px 16px 16px;
+    background-color: #f1f1f1;
+    font-weight: 700;
+}
+
+
+.Errorclosebtn{
+    display:block;
+    font: inherit;
+    cursor: pointer;
+    background-color: #f1f1f1;
+    color: black;
+    border: 1px solid #abc4b2;
+    border-radius: 4px;
+    font-size: 13px;
+    font-weight: bold;
+    margin: 0 auto;
+    padding: 0px 10px;
+
+    margin-top: 10px;
+    margin-bottom: 10px;
+    transition: background-color 0.3s;
+}
+
+.Errorclosebtn:hover{
+  background-color: #abc4b2;
+}
+
+
+
+
+.Errormodalmain {
+    padding: 16px;
+    border-top: 1px solid #dee2e6;
+}
+
+
+/*modal 과 openModal 두개의 class를 동시에 가지는 class 에만 적용되는 선택자!!*/
+
+.Errormodal.ErroropenModal {    
+    display: flex;
+    align-items: center;
+    animation: modal-bg-show 0.3s;
+}
+
+
+/* 애니메이션 효과 정의 */
+
+@keyframes modal-show {
+    from {
+      opacity: 0;
+      margin-top: -50px;
+    }
+    to {
+      opacity: 1;
+      margin-top: 0;
+    }
+}
+
+
+@keyframes modal-bg-show {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
