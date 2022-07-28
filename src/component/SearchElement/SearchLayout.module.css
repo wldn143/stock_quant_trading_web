@@ -17,8 +17,14 @@
     margin: 0 auto;
     margin-top: 5px;
     font-weight: bold;
+
+    cursor: pointer;
 }
 
 .SearchresultList li:hover{
     border: 2px solid grey;
+}
+
+.Enjoybtn{
+    cursor:pointer;
 }

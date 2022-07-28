@@ -37,7 +37,10 @@ function SearchLayout(){
                 <ul className={classes.SearchresultList}>
                     {SearchresultList.map((item) =>{
                         return(
-                            <li onClick={()=>selectHandler(item)}><span >{item}</span> <button onClick={()=>EnjoySearchHandler(item)}>ㅇ</button> </li>
+                            <li onClick={()=>selectHandler(item)}>
+                                <span >{item}</span> 
+                                <button className={classes.Enjoybtn} onClick={()=>EnjoySearchHandler(item)}>ㅇ</button> 
+                            </li>
                         )
                     }) }
 
