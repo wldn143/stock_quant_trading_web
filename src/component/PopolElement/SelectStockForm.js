@@ -3,6 +3,7 @@ import classes from "./SelectStockForm.module.css"
 
 import {useState} from 'react';
 import Modal from "./Modals/Modal";
+import ErrorModal from "./Modals/ErrorModal";
 
 
 
@@ -13,14 +14,28 @@ function SelectStockForm(){
     const [searchResult, setsearchResult] = useState([]);         //  검색리스트 저장 변수
     const [stockCart, setstockCart] = useState([]);             //   장바구니리스트 저장 변수
 
+    const [ErrormodalOpen, setErrormodalOpen] = useState(false);
+
+    function OpenErrormodal(){
+        setErrormodalOpen(true);
+    }
+
+    function CloseErrormodal(){
+        setErrormodalOpen(false);
+    }
 
 
-    const openModal = () => {     
-      setModalOpen(true);
+    function openModal(){  
+        if(stockCart.length === 0){
+            OpenErrormodal();
+            return;
+        }
+    
+        setModalOpen(true);
     };
 
-    const closeModal = () => {
-      setModalOpen(false);
+    function closeModal() {
+        setModalOpen(false);
     };
 
     function selectHandler(params){             // 검색리스트에서 주식 클릭시, 해당 주식명 params으로 받기
@@ -70,6 +85,7 @@ function SelectStockForm(){
                 <Modal open={modalOpen} close={closeModal}>
                     
                 </Modal>
+                <ErrorModal open={ErrormodalOpen} close={CloseErrormodal} main="장바구니에 주식을 추가하세요" header="error"></ErrorModal>
 
                 
             </section>
