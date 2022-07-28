@@ -1,10 +1,11 @@
 import AfterLogin from "../component/layout/AfterLogin";
+import SearchLayout from "../component/SearchElement/SearchLayout";
 
 
 function SearchPage(){
     return <div> 
         <AfterLogin>
-            search Page 
+            <SearchLayout/>
         </AfterLogin>
     
     </div>
