@@ -13,6 +13,7 @@ const SelectButton=styled.button`
     width: 500px;
     transition: background-color 0.5s;
     margin-top: 50px;
+    cursor: pointer;
 
     background-color: ${props => {              // 가변디자인. 버튼눌르면 버튼색바뀜
         if(props.Clicked === 1){

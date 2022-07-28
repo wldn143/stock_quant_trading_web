@@ -25,6 +25,7 @@
     margin: 0 auto;
     margin-top: 5px;
     font-weight: bold;
+    cursor: pointer;
     
 }
 
@@ -45,7 +46,9 @@
 }
 
 
-
+.deletebtn{
+    cursor:pointer;
+}
 
 .resultList li:hover{
     border: 2px solid grey;
