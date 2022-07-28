@@ -6,11 +6,50 @@
     margin-top: 20px;
 }
 
+
+
 .searchbar{
     width: 400px;
-    height: 40px;
+    height: 30px;
     max-width: 500px;
-    border: 1px solid white;
+    border: 1px solid black;
+    border-radius: 5px;
+    
+}
+
+.searchbtn{
+    height: 32px;
+    margin-left: 5px;
+    background: white;
+    border: 1px solid black;
+    border-radius: 5px;
+}
+
+.searchbtn:hover{
+    background: #dbcbca;
+}
+
+
+.autoSearchResultList{
+    height: 20px;
+    text-align: start;
+    border-left: 1px solid black;
+    border-right: 1px solid black;
+    width: 400px;
+    margin: 0 auto;
+    font-size: 10px; 
+    position: relative;
+    left: -18px;
+    
+}
+
+.autoSearchResultList:last-child{
+    border-bottom: 1px solid black;
+}
+
+.autoSearchResultList:hover{
+    background-color: #f5f0f0;
+    cursor: pointer;
 }
 
 
