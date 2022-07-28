@@ -25,19 +25,20 @@ const Modal = (props) => {
     SetOpenErrorhigh(false);
   }
 
-  function CloseErrorlow(){
+  function CloseErrorlow(){    // 잔고미달 에러 모달 close handler
     SetOpenErrorlow(false);
   }
 
   function CloseSuccess(){    // 성공 모달 close handler
     SetOpenSuccess(false);
-    navigate('/home/balance');
+    navigate('/home/balance');    // 성공모달 닫힐때, 잔고페이지로 이동
   }
 
 
 
 
   /* balance에 dummy data 로 테스트 */
+
   useEffect(()=>{
     Setbalance(150000);
   })
@@ -67,7 +68,7 @@ const Modal = (props) => {
 
     const enteredamount = amount.current.value;
 
-    // 설정금액이 잔고금액보다 크면, fetch하지않고 함수 벗어남
+    // 설정금액이 잔고금액보다 크면, 에러모달 띄우기. fetch하지않고 함수 벗어남
 
     if(Number(enteredamount) > Number(balance)){
       console.log(enteredamount);
@@ -75,10 +76,16 @@ const Modal = (props) => {
       return;
     }
 
+    // 설정금액이 일정금액 미달이면, 에러모달 띄우기. fetch하지 않고 함수 벗어남
+
     if(Number(enteredamount) < Number(50000)){
       SetOpenErrorlow(true);
       return;
     }
+
+
+
+    // 금액 조건 만족시, 서버로 설정금액 전송.  성공모달 띄우기
 
     fetch('https://stock-a95d6-default-rtdb.firebaseio.com/.json',{
       method: 'POST',
