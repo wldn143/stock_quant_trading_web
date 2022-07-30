@@ -1,19 +1,23 @@
 
 
 import classes from './SearchBar.module.css';
-import { useState} from 'react';
+import { useEffect, useState} from 'react';
 
 
 function SearchBar({setsearchResult}){
 
 
     /* 자동완성 dummy data */
-    let serverData=['삼성전자','한화','SK','삼성전자우','삼수','삼지창', '삼지창줘'];
+    // let serverData=['삼성전자','한화','SK','삼성전자우','삼수','삼지창', '삼지창줘'];
+
+
+    /* 서버에서 받아온 주식데이터 */    
+    let [serverData, setserverData] = useState();
+
 
 
 
     let [autoSearchResult, setautoSearchResult] = useState([]);  // 자동완성 결과 저장 변수
-
     let [inputValue, setinputValue] = useState();      //  검색값 저장 변수
    
     
@@ -22,12 +26,14 @@ function SearchBar({setsearchResult}){
 
         setinputValue(e);          
         let data = e;
-        
+
         let filterdata = [];    
 
         filterdata = serverData.filter((x) =>               // filter함수를 통하여, 자동완성 결과 배열 구성
             x.toLowerCase().includes(data.toLowerCase())
         );
+
+        filterdata = filterdata.slice(0,5);        // 자동완성 목록 5개로 제한
 
         if(data.length === 0){              // 아무입력도 없을때, 자동완성 드롭다운 없애기용
             filterdata = [];   
@@ -53,14 +59,18 @@ function SearchBar({setsearchResult}){
     }
 
 
-
     function autoClick(params){         // 자동완성 변수 클릭시
         setinputValue(params);          // 검색바에 해당값 띄우고
         inputChange(params);            // 자동완성리스트 업데이트
     }
 
 
-    
+    useEffect(()=>{             // sessionStorage 에서, 주식이름들 데이터 가져오기
+        let temp = sessionStorage.getItem('StockNames');
+        temp = JSON.parse(temp);        // 배열형태로 변환 필요
+        setserverData(temp);
+        
+    },[])
 
 
     return(
