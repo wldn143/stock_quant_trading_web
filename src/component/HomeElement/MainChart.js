@@ -112,7 +112,7 @@ function MainChart(){
         fetch('http://54.215.210.171:8000/getPrice',{
             method: 'POST',
             body: JSON.stringify({
-                'code': '005930',
+                'code': 'KS11',
                 'start': '2022-06-25'
             }),
             headers:{
@@ -130,7 +130,7 @@ function MainChart(){
         fetch('http://54.215.210.171:8000/getPrice',{
             method: 'POST',
             body: JSON.stringify({
-                'code': '005935',
+                'code': 'KQ11',
                 'start': '2022-06-25'
             }),
             headers:{
@@ -147,18 +147,30 @@ function MainChart(){
         fetch('http://54.215.210.171:8000/getPrice',{
             method: 'POST',
             body: JSON.stringify({
-                'code': '009830',
-                'start': '2022-06-25'
+                'code': 'USD/KRW',
+                'start': '2022-07-01'
             }),
             headers:{
                 'Content-Type': 'application/json'
             }
-        }).then(response => {return response.json()})
+        }).then(response => response.json() )
         .then(data => {
             setchartData3(data);
-            setLoading(false);
+            console.log(data);
+            
         }) 
-        
+
+
+        // 자동완성에 필요한 주식 이름들 받아오기. SessionStorage StockNames 에 저장.
+
+        fetch('http://54.215.210.171:8000/getNames')
+        .then( response =>  response.json() )
+        .then( data => {
+            sessionStorage.setItem('StockNames', JSON.stringify(data));
+            setLoading(false);
+        })
+   
+
     },[])
 
 
