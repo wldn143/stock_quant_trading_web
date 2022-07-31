@@ -5,40 +5,36 @@ import {useEffect, useState} from 'react';
 import Modal from "./Modals/Modal";
 import ErrorModal from "./Modals/ErrorModal";
 
+import Loadingprice from "../layout/Loadingprice";
+
 
 
 function SelectStockForm(){
 
+    let [isLoadingcart, setisLoadingcart] = useState(false);
 
     const [modalOpen, setModalOpen] = useState(false);             // 자본선택 modal 창 관리 변수
 
-    const [searchResult, setsearchResult] = useState([]);         //  검색리스트 저장 변수
-    const [searchResultPrice, setsearchResultPrice] = useState([]);        //  검색리스트의 {name:, price:} 저장 변수
+    const [searchResultStock, setsearchResultStock] = useState([]);         //  검색리스트의 stockname 저장 변수
+    const [searchResultPrice, setsearchResultPrice] = useState([]);        //  검색리스트의 price 저장 변수
 
 
-    const [stockCart, setstockCart] = useState([]);             //   장바구니리스트 저장 변수
+    const [stockCartStock, setstockCartStock] = useState([]);             //   장바구니리스트 stockname 저장 변수
 
-    const [stockCartTemp, setstockCartTemp] = useState([]);
 
-    const [stockCartPrice, setstockCartPrice] = useState([]);        //  장바구니리스트의 {name:, price:} 저장 변수
+    const [ErrormodalOpen, setErrormodalOpen] = useState(false);        //  장바구니 비었는데 선택완료 버튼 눌렀을때, 에러모달
 
-    const [ErrormodalOpen, setErrormodalOpen] = useState(false);
 
     function OpenErrormodal(){
         setErrormodalOpen(true);
     }
 
-
-
-
-
     function CloseErrormodal(){
         setErrormodalOpen(false);
     }
 
-
     function openModal(){  
-        if(stockCart.length === 0){
+        if(stockCartStock.length === 0){
             OpenErrormodal();
             return;
         }
@@ -51,67 +47,45 @@ function SelectStockForm(){
     };
 
 
-    function selectHandler(parname, parprice){             // 검색리스트에서 주식 클릭시, 해당 주식명 params으로 받기
+    function selectHandler(item){             // 검색리스트에서 주식 클릭시, 해당 주식명, 인덱스 params으로 받기
 
-        if(!stockCart.includes(parname) ){            //  장바구니리스트에 이미 있는 주식인지 체크
+        if(!stockCartStock.includes(item) ){            //  장바구니리스트에 이미 있는 주식인지 체크
 
-            setstockCartPrice([...stockCartPrice, {name:parname, price:parprice}]);       // 장바구니리스트 추가
-            setstockCart([...stockCart, parname]);
+            setstockCartStock([...stockCartStock, item]);
         } 
-    }
-
-
-   function deleteHandler(params){             //  장바구니 리스트에서 x 버튼 클릭시, 해당 주식 삭제
-
-                                            // stockCart에서 제외하고 난뒤, 그걸 토대로 stockCartPrice에서 제외하기 떄문에
-                                            // stockCart에 의존하는 콜백함수 필요. 하지만 stockCart는 장바구니 추가시에도 변경되는 변수이므로
-                                            // stockCartTemp를 따로 또 만들어서 useEffect에 삽입!!
-
-        setstockCartTemp(stockCart.filter( x => x !== params ));
-        setstockCart(stockCart.filter( x => x !== params ));
 
     }
 
-    useEffect(()=>{
-        setstockCartPrice(stockCartPrice.filter( x => stockCartTemp.includes(x.name)));  
-    },[stockCartTemp])
-
-    
 
 
 
+    function deleteHandler(item){             //   장바구니 x 버튼 눌렀을때
+
+        setstockCartStock(stockCartStock.filter( x => x !== item ));     // 주식이름 리스트에서 filter로 제거
+
+    }
 
 
     useEffect(()=>{
         
+        setisLoadingcart(true);
 
         fetch('http://54.215.210.171:8000/getPreview',{
             method: 'POST',
             body:JSON.stringify({
-                code: searchResult
+                code: searchResultStock
             }),
             headers:{
                 'Content-Type' : './application.json'
             }
         }).then( response => response.json())
         .then( data => {
-            let temp = [];
-            for(let i = 0; i < searchResult.length; i++){
-                temp.push({name: searchResult[i], prcie: data[i]});
-            }
-
-            setsearchResultPrice(temp);
+            setsearchResultPrice(data);
+            setisLoadingcart(false);
         })
 
 
-        // let temp = [];
-        // for(let i = 0; i < searchResult.length; i++){
-        //     temp.push({name: searchResult[i], price: "1"});
-        // }
-
-        // setsearchResultPrice(temp);
-
-    },[searchResult]);
+    },[searchResultStock]);
 
    
     
@@ -120,36 +94,71 @@ function SelectStockForm(){
 
     return(
         <>
-            <SearchBar setsearchResult={setsearchResult}/>
+            <SearchBar setsearchResult={setsearchResultStock}/>
             <section className={classes.box} >
                 <ul className={classes.resultList}>
-                    {searchResultPrice.map((item) =>{
-                        return(
-                            <li onClick={()=>selectHandler(item.name, item.price)}>{item.name} <span>{item.price}</span></li>
-                        )
-                    }) }
+                    <section>
+                        {searchResultStock.map((item, idx) =>{
+                            return(
+                                <li className={classes.Formstocklist} onClick={()=>selectHandler(item)}>{item} </li>
+                            )
+                        }) }
+
+                    </section>
+                    
+                    {isLoadingcart? 
+                        <section>
+                            {searchResultStock.map((x)=>{
+                                return(
+                                    <>                                
+                                        <li className={classes.Formpricelist}> <Loadingprice/> </li>
+                                    </>
+                                )     
+                            })}
+                        </section>
+                        :
+                        <section>
+                            {searchResultPrice.map((price)=>{
+                                return(
+                                    <>
+                                        <li className={classes.Formpricelist}>{price}</li>
+                                    </>
+                                )
+                            })
+
+                            }
+                        </section>
+                    }       
+
+
+                    
+                </ul>
+
+
+
 
                 
-                </ul>
+                <h2 className={classes.carthead}> 장바구니 </h2>
+
 
                 <ul className={classes.cartList}>
-                    <h2> 장바구니 </h2>
+                    <section>
+                        {stockCartStock.map((item)=>{
+                            return(
+                                <li className={classes.Formstocklist}>
+                                    <span>{item}</span> 
+                                    <button className={classes.deletebtn} onClick={()=>deleteHandler(item)}>x</button> 
+                                </li>
+                            )
+                        })}
+                    </section>
+                    
 
-                    {stockCartPrice.map((item)=>{
-                        return(
-                            <li>
-                                <span>{item.name}</span> 
-                                <section>
-                                    <span>{item.price}</span>
-                                    <button className={classes.deletebtn} onClick={()=>deleteHandler(item.name)}>x</button> 
-                                </section>
-                                
-                            </li>
-                        )
-
-                    })}
 
                 </ul>
+                    
+
+                
 
 
 

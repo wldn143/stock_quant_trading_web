@@ -1,18 +1,24 @@
 
-.Searchbox{
-    text-align: center;
+
+
+.SearchresultStockList{
+    display: flex;
+    justify-content: center;
 }
 
-.SearchresultList li{
+.stocklist{
     display: flex;
     justify-content: space-between;
     
     list-style: none;
     background-color: #f1f1f1;
     border: 2px solid #f1f1f1;
+    border-right: none;
     border-radius: 10px;
     padding: 20px 0px;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+    width:500px;
+    height: 25px;
     max-width: 700px;
     margin: 0 auto;
     margin-top: 5px;
@@ -21,9 +27,32 @@
     cursor: pointer;
 }
 
-.SearchresultList li:hover{
+.stocklist:hover{
     border: 2px solid grey;
 }
+
+
+.pricelist{
+    display: flex;
+    justify-content: space-between;
+    
+    list-style: none;
+    background-color: #f1f1f1;
+    border: 2px solid #f1f1f1;
+    border-left: none;
+    border-radius: 10px;
+    padding: 20px 0px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+    width:150px;
+    height:25px;
+    max-width: 700px;
+    margin: 0 auto;
+    margin-top: 5px;
+    font-weight: bold;
+
+}
+
+
 
 .Enjoybtn{
     cursor:pointer;
