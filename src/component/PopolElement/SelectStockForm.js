@@ -8,6 +8,8 @@ import ErrorModal from "./Modals/ErrorModal";
 import Loadingprice from "../layout/Loadingprice";
 
 
+// TODO 1 : 장바구니 주식 리스트, 서버로 전송하는 로직. (설정금액과 한꺼번에 전송할건지 아닌지)
+
 
 function SelectStockForm(){
 
