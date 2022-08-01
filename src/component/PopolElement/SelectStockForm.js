@@ -1,4 +1,4 @@
-import SearchBar from "./SearchBar";
+import SearchBar from "../SearchElement/SearchBar";
 import classes from "./SelectStockForm.module.css"
 
 import {useEffect, useState} from 'react';

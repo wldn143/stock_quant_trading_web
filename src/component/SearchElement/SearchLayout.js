@@ -1,4 +1,4 @@
-import SearchBar from "../PopolElement/SearchBar";
+import SearchBar from "./SearchBar";
 import {useState, useEffect} from 'react';
 import classes from './SearchLayout.module.css';
 import {useNavigate} from 'react-router-dom';
