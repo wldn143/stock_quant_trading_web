@@ -4,22 +4,33 @@ import classes from './SearchLayout.module.css';
 import {useNavigate} from 'react-router-dom';
 import Loadingprice from "../layout/Loadingprice";
 
+import styled from 'styled-components';
+
+const EnjoybtnOn=styled.button`
+    cursor: pointer;
+    border: none;
+    padding: none;
+    font-size: 25px;
+    position: relative;
+    bottom: 5px;
+`
+
+const EnjoybtnOff=styled.button`
+    cursor: pointer;
+    border: none;
+    padding: none;
+    font-size: 32px;
+    position: relative;
+    bottom: 10px;
+   
+`
 
 
 
-// TODO 1 : Session Storage에 저장된 FavList 배열형태 tostr 에 저장
 
-// TODO 2 : SearchResultStockList 가 변할때마다 랜더링되는 useEffect 에,  
-//           tostr에 포함되있는 StockList가 있는지 검사. 검사후, Enjoybtn 색깔 변하게 처리
+// TODO 1 : 서버에서 FavList 배열형태 tostr 에 저장
 
-// TODO 3 : Enjoybtn 클릭시, FavList에 있는 주식인지 검사. 
-//              tostr에 없는주식이라면 ->  tostr에 추가후 서버에 set
-//              tostr에 있는주식이라면 ->  tostr에서 제거후 서버에 set
-
-//              그후, rerender해서, 해당화면의 버튼색깔 변경해줘야함!
-
-
-// 그냥 button list를 따로 만드는게 낳을듯.
+// TODO 2 : 주식리스트, 주식가격, 즐겨찾기 버튼   하나의 바로 보이게 디자인 수정
 
 
 function SearchLayout(){ 
@@ -30,18 +41,22 @@ function SearchLayout(){
 
     const uuid = sessionStorage.getItem('uuid');        // uuid sessionStorage에서 불러오기
 
-    const [tostr, settostr] = useState(JSON.parse(sessionStorage.getItem('FavLlist')));     // 즐겨찾기 목록 sessionStorage에서 불러오기
+    /* 즐겨찾기 목록 dummy data */
+    const [tostr, settostr] = useState(['삼성전자','SK하이닉스'])  
 
 
     
 
+    // 검색리스트 저장 변수. 초기데이터 : KOSPI 상위 10개 주식
 
-    const [SearchresultStockList, setSearchresultStockList] = useState([]);         //  검색리스트 저장 변수
+    const [SearchresultStockList, setSearchresultStockList] = useState(['삼성전자', 'LG에너지솔루션', 'SK하이닉스', '삼성바이오로직스', '삼성전자우', 'LG화학', 'NAVER', '현대차', '삼성SDI', '기아']);     
+    
     const [SearchresultPriceList, setSearchresultPriceList] = useState([]);        //  검색리스트의 price 저장 변수
 
 
 
-    function selectHandler(params){                 // 주식 눌렀을때, chart 페이지로 이동. 해당 주식정보 chart 페이지로 전송
+    // 주식 눌렀을때, chart 페이지로 이동. 해당 주식정보 chart 페이지로 전송
+    function selectHandler(params){                 
         navigate('/home/chart',{state:{
             code: params
         }}
@@ -49,7 +64,9 @@ function SearchLayout(){
     }
 
 
-    function EnjoySearchHandler(item){             //  즐겨찾기 버튼 눌렀을때의 동작
+
+    //  즐겨찾기 버튼 눌렀을때의 동작
+    function EnjoySearchHandler(item){             
 
         if(!tostr.includes(item)){      
             settostr([...tostr, item]);
@@ -58,46 +75,46 @@ function SearchLayout(){
             settostr(tostr.filter(x=> x !== item))
         }
 
-        settostr(JSON.stringify(tostr));
-
-        console.log(uuid);
-
-        fetch(`http://haniumproject.com/getUserAccount/${uuid}`)
-        .then(response => response.json())
-        .then(data => {
-            console.log(data)
-            console.log("done fetch1");
-        });
+        console.log(tostr);
         
-        fetch(`http://haniumproject.com/setUserFavList/${uuid}/${tostr}`)
-        .then(response => response.json())
-        .then(data => {
-            console.log(data);
-            console.log("done fetch2");
-        });
+        // fetch(`http://haniumproject.com/setUserFavList/${uuid}/${tostr}`)
+        // .then(response => response.json())
+        // .then(data => {
+        //     console.log(data);
+        //     console.log("done fetch2");
+        // });
     }
 
 
+    // 즐겨찾기 목록에 있는 주식이름인지 체크하는 함수. item이 즐겨찾기 목록에 있는 주식이름이라면, 버튼색깔 변경
+    function InEnjoyList(item){
 
-
-    useEffect(()=>{                 //  검색결과 리스트가 변할때마다,  서버에서 해당 리스트의 price 리스트를 받아옴.
-        
-        setisLoading(true);
-
-
-
-        // 즐겨찾기 목록에 있는 주식이름인지 체크. 즐겨찾기 목록에 있는 주식이름이라면, 버튼색깔 변경
-
-        for(let i = 0; i < SearchresultStockList.length; i++){
-            for(let j = 0; j < tostr.length; j++){
-                if(SearchresultStockList[i] === tostr[j]){
-                    // 버튼색깔 바꿔주기
-                }
+        for(let i = 0; i < tostr.length; i++){
+            if(tostr[i] === item){
+                return true;
             }
         }
+        return false;
+    }
 
 
+    // 검색페이지 최초 랜더링시, 즐겨찾기 목록 서버에서 가져옴.
+    useEffect(()=>{
+        fetch(`http://haniumproject.com/getUserAccount/${uuid}`)
+        .then( response => response.json())
+        .then( data => {
+            console.log(data)
+            settostr(data.favlist.split(","));
+        });
+    },[])
 
+    
+
+
+    //  검색결과 리스트가 변할때마다,  서버에서 해당 리스트의 price 리스트를 받아옴.
+    useEffect(()=>{                 
+        
+        setisLoading(true);
 
         fetch('http://54.215.210.171:8000/getPreview',{
             method: 'POST',
@@ -124,10 +141,14 @@ function SearchLayout(){
 
 
     //  getPreview를 통해서, 주식이름 리스트의 가격리스트를 받아오는 로딩시간 너무 길다.
-
     //  따라서, 비동기적 구현으로  주식이름 리스트를 먼저띄운뒤,    로딩스피너를 통해   가격리스트에 로딩상태를 띄운다.
-
     //  가격리스트가 수신 완료되면,  로딩상태를 가격리스트로 치환한다!!
+
+
+    // 즐겨찾기 버튼을 삼항연산자로 나눈다.
+    // return 값이 boolean인 InEnjoyList 함수에 각 item을 넣고,  
+    //                      tostr에 있는 item이면 노란별 띄우기
+    //                      tostr에 없는 item이면 흰별 띄우기
 
     return(
         <>
@@ -154,7 +175,6 @@ function SearchLayout(){
                             return(<> 
                                 <li className={classes.pricelist}>
                                     <Loadingprice/>
-                                    <button className={classes.Enjoybtn} onClick={()=>EnjoySearchHandler(item)}>o</button>
                                 </li>
 
                             </>
@@ -169,7 +189,6 @@ function SearchLayout(){
                             return(<> 
                                 <li className={classes.pricelist}>
                                     <span>{price}</span>
-                                    <button className={classes.Enjoybtn} onClick={()=>EnjoySearchHandlerPrice(price, idx)}>o</button>
                                 </li>
 
                             </>
@@ -178,6 +197,25 @@ function SearchLayout(){
 
                         </section>
                     }    
+
+                    <section>
+                        { SearchresultStockList.map((item) => {
+                            return(<>
+                                <li className={classes.btnlist}>
+
+                                    {InEnjoyList(item) === true ?
+                                        (<EnjoybtnOn onClick={()=>EnjoySearchHandler(item)}>⭐</EnjoybtnOn>)
+                                        :
+                                        (<EnjoybtnOff onClick={()=>EnjoySearchHandler(item)}>☆</EnjoybtnOff>)
+                                    }
+                                    
+                                </li>
+                            </>
+                            )})
+                        }
+
+                        
+                    </section>
                     
 
                 </ul>
