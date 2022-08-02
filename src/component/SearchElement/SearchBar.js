@@ -8,11 +8,11 @@ function SearchBar({setsearchResult}){
 
 
     /* 자동완성 dummy data */
-    // let serverData=['삼성전자','한화','SK','삼성전자우','삼수','삼지창', '삼지창줘'];
+    // let serverData=['삼성전자','한화','SK','삼성전자우','SK하이닉스', '한화투자증권'];
 
 
     /* 서버에서 받아온 주식데이터 */    
-    let [serverData, setserverData] = useState();
+    let [serverData, setserverData] = useState([]);
 
 
 
@@ -33,7 +33,7 @@ function SearchBar({setsearchResult}){
             x.toLowerCase().includes(data.toLowerCase())
         );
 
-        filterdata = filterdata.slice(0,5);        // 자동완성 목록 5개로 제한
+        filterdata = filterdata.slice(0,10);        // 자동완성 목록 10개로 제한
 
         if(data.length === 0){              // 아무입력도 없을때, 자동완성 드롭다운 없애기용
             filterdata = [];   
