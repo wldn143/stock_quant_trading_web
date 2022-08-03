@@ -3,25 +3,47 @@ import classes from "../HomeElement/MainChart.module.css";
 import DrawChart from "../HomeElement/DrawChart";
 import Loading from "../layout/Loading2";
 import styled from "styled-components";
-
-const SearchActiveBtn=styled.div`
-    width: 350px;
-    height: 35px;
-    border:none;
-    border-radius:8px;
-    color:#545454;
-    font-size:15px;
-    background-color:#f2f2f2;
-    cursor:pointer;
-`
-const SearchBar=styled.input`
-    width: 400px;
+//로딩중에 검색어 입력하면 filter useEffect 처리 안됨
+const SearchBar=styled.div`
+    width: 405px;
     height: 42px;
     background-color:#f2f2f2;
     border:none;
     border-radius:8px;
     font-size:17px;
+    background-image: url(${require("./searchIcon.png")});
+    background-position: 13px center;
+    background-size: 25px;
+    background-repeat: no-repeat;
+    display:flex;
 `
+const InputBox=styled.input`
+    width: 75%;
+    height: 90%;
+    margin-left:50px;
+    border:none;
+    background-color:transparent;
+    font-size:17px;
+    :focus{
+        outline:none;
+    }
+`
+const DeleteBtn=styled.button`
+width: 25px;
+height: 42px;
+background-image: url(${require("./close.png")});
+border:none;
+background-size: 20px;
+background-repeat: no-repeat;
+cursor:pointer;
+background-position: center;
+margin-left:10px;
+background-color:transparent;
+&:hover {
+    background-color:#cdcdcd;
+}
+`
+
 const ResultBtn=styled.button`
     height:52px;
     width:100%;
@@ -30,7 +52,8 @@ const ResultBtn=styled.button`
     text-align: left;   
     display:flex;
     flex-direction:column;
-    background-color:#ffffff;
+    background-color:transparent;
+    border-radius:2px;
     &:hover {
         background-color:#f2f2f2;
     }
@@ -39,10 +62,13 @@ const CodeContainer=styled.div`
     color: #9c9c9c;
     height:15px;
     font-size:15px;
+    margin-left:45px;
 `
 const NameContainer=styled.div`
     height:20px;
     font-size:17px;
+    margin:5px 0 0 45px;
+
 `
 function ChartInfo(){
     const [keyword, setKeyword]=useState('');//검색키워드
@@ -58,10 +84,11 @@ function ChartInfo(){
     useOutsideAlerter(wrapperRef);
     let stockInfo=[];
     //종목명:코드 데이터 
+
     useEffect(()=>{ 
-        setisLoading(true);
         if(nameToCode.length===0||stockCodes.length===0||stockNames.length===0){
-        fetch(`http://54.215.210.171:8000/getNameToCode`)
+            setisLoading(true);
+            fetch(`http://54.215.210.171:8000/getNameToCode`)
         .then( response =>  response.json() )
         .then( data => {
             setNameToCode(data);
@@ -103,6 +130,7 @@ function ChartInfo(){
         function handleClickOutside(event) {
         if (ref.current && !ref.current.contains(event.target)) {
             setSearchMode(false);
+            setKeyword('')
         }
         }
   
@@ -150,39 +178,25 @@ function ChartInfo(){
         //     }) 
         // },[])
     
+        //style={{backgroundImage: `url(${require("./searchIcon.png")}`}}
         useEffect(()=>{
            parsing1(); 
         },[chartData1])
-
     return(
         <>
-        <SearchActiveBtn onClick={onSearch} ref={wrapperRef}>
-        {searchMode?<>{loading?<Loading/>:<><SearchBar type='text' value={keyword} onChange={onChange} placeholder="종목명을 입력하세요."/>
-                
-                <div style={{height:`${result.length*52}px`, width:'407px'}}>        
-                
-                {result.map((stock)=>{
-                    return(
-                    <ResultBtn key={stock.code}><NameContainer>{stock.name}</NameContainer><CodeContainer>{stock.code}</CodeContainer></ResultBtn>
-                )})}
-
-                </div>
-                
-                </>}</>
-                :<>검색</>}
-                </SearchActiveBtn>
-        {/* {
-            result!==undefined&&result.length?<>
-            {loading?<Loading/>:
-                <div style={{borderWidth: 0.5, borderColor: '#9c9c9c',borderStyle: 'solid', borderTop:"none", height:`${result.length*52}px`, width:'407px'}}>        
-                {result.map((stock)=>{
-                    return(
-                    <ResultBtn key={stock.code}><NameContainer>{stock.name}</NameContainer><CodeContainer>{stock.code}</CodeContainer></ResultBtn>
-                )})}
-                </div>}
-            </>:<></>
-        } */}
-
+        <SearchBar>
+        <InputBox onClick={onSearch} ref={wrapperRef} type='text' value={keyword} onChange={onChange} placeholder='종목명을 입력하세요'/>
+        <DeleteBtn/>
+        </SearchBar>
+        {searchMode?<>{loading?<Loading/>:
+        <>{result.length?<div ref={wrapperRef} style={{height:`${result.length*52}px`, borderRadius:'8px',boxShadow: '0px 5px 15px -5px #c8c8c8', width:'407px'}}>        
+        {result.map((stock)=>{
+            return(
+            <ResultBtn key={stock.code}><NameContainer>{stock.name}</NameContainer><CodeContainer>{stock.code}</CodeContainer></ResultBtn>
+        )})}
+    </div>:<></>}</>
+            }</>
+        :<></>}
             
         {/* {loading ? <Loading/> : 
         <section className={classes.frame1}>
