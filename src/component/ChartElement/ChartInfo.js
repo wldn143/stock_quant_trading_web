@@ -1,17 +1,26 @@
-import React, { useEffect, useState } from "react";
-import classes2 from './ChartInfo.module.css'
+import React, { useEffect, useRef, useState } from "react";
 import classes from "../HomeElement/MainChart.module.css";
 import DrawChart from "../HomeElement/DrawChart";
 import Loading from "../layout/Loading2";
 import styled from "styled-components";
 
-const ResultContainer=styled.div`
-    height:275px;
-    width:407px;
-    display:flex;
-    flex-direction:column;
-    justify-content: end;
-    box-shadow:  3px 5px 5px 5px #eeeeee;
+const SearchActiveBtn=styled.div`
+    width: 350px;
+    height: 35px;
+    border:none;
+    border-radius:8px;
+    color:#545454;
+    font-size:15px;
+    background-color:#f2f2f2;
+    cursor:pointer;
+`
+const SearchBar=styled.input`
+    width: 400px;
+    height: 42px;
+    background-color:#f2f2f2;
+    border:none;
+    border-radius:8px;
+    font-size:17px;
 `
 const ResultBtn=styled.button`
     height:52px;
@@ -22,6 +31,9 @@ const ResultBtn=styled.button`
     display:flex;
     flex-direction:column;
     background-color:#ffffff;
+    &:hover {
+        background-color:#f2f2f2;
+    }
 `
 const CodeContainer=styled.div`
     color: #9c9c9c;
@@ -31,7 +43,6 @@ const CodeContainer=styled.div`
 const NameContainer=styled.div`
     height:20px;
     font-size:17px;
-
 `
 function ChartInfo(){
     const [keyword, setKeyword]=useState('');//검색키워드
@@ -39,10 +50,12 @@ function ChartInfo(){
     const [nameToCode, setNameToCode]=useState([])//{종목명:코드} 객체
     const [stockNames, setStockNames]=useState([])//종목명 배열
     const [stockCodes, setStockCodes]=useState([])//코드 배열
-    //const [stockInfo,setStockInfo]=useState([]);
     let [loading, setLoading] = useState(true);
     let [chartDataObj1, setchartDataObj1] = useState(null); 
     const [isLoading, setisLoading] = useState(false);
+    const [searchMode, setSearchMode]=useState(false);
+    const wrapperRef=useRef(null);
+    useOutsideAlerter(wrapperRef);
     let stockInfo=[];
     //종목명:코드 데이터 
     useEffect(()=>{ 
@@ -69,6 +82,11 @@ function ChartInfo(){
     const onChange=(e)=>{
         setKeyword(e.target.value)
     }
+
+    function onSearch(){
+        setSearchMode(true);
+    }
+
     //검색어 포함하는 종목명을 배열로 filter
     useEffect(()=>{ 
         if(keyword!==''){
@@ -79,10 +97,24 @@ function ChartInfo(){
             setResult([])
         }
     },[keyword])
-    
+
+    //검색창클릭시에만 검색 컨테이너 표시
+    function useOutsideAlerter(ref) {
+        function handleClickOutside(event) {
+        if (ref.current && !ref.current.contains(event.target)) {
+            setSearchMode(false);
+        }
+        }
+  
+    useEffect(() => {
+      document.addEventListener("mousedown", handleClickOutside);
+      return () => {
+        document.removeEventListener("mousedown", handleClickOutside);
+      };
+    });
+  }
 
         /*차트 그리기*/
-    
         let [chartData1, setchartData1] = useState({ 
             Open: {'keys':'values'},
             High: {'keys':'values'},
@@ -124,17 +156,33 @@ function ChartInfo(){
 
     return(
         <>
-        <input className={classes2.search} type='text' value={keyword} onChange={onChange} placeholder='종목명을 입력하세요'/>
+        <SearchActiveBtn onClick={onSearch} ref={wrapperRef}>
+        {searchMode?<>{loading?<Loading/>:<><SearchBar type='text' value={keyword} onChange={onChange} placeholder="종목명을 입력하세요."/>
+                
+                <div style={{height:`${result.length*52}px`, width:'407px'}}>        
+                
+                {result.map((stock)=>{
+                    return(
+                    <ResultBtn key={stock.code}><NameContainer>{stock.name}</NameContainer><CodeContainer>{stock.code}</CodeContainer></ResultBtn>
+                )})}
 
-        <ResultContainer>
-        {loading?<Loading/>:
-            <>        
-            {result.map((stock)=>{
-                return(
-                <ResultBtn key={stock.code}><NameContainer>{stock.name}</NameContainer><CodeContainer>{stock.code}</CodeContainer></ResultBtn>
-            )})}
-            </>}
-        </ResultContainer>
+                </div>
+                
+                </>}</>
+                :<>검색</>}
+                </SearchActiveBtn>
+        {/* {
+            result!==undefined&&result.length?<>
+            {loading?<Loading/>:
+                <div style={{borderWidth: 0.5, borderColor: '#9c9c9c',borderStyle: 'solid', borderTop:"none", height:`${result.length*52}px`, width:'407px'}}>        
+                {result.map((stock)=>{
+                    return(
+                    <ResultBtn key={stock.code}><NameContainer>{stock.name}</NameContainer><CodeContainer>{stock.code}</CodeContainer></ResultBtn>
+                )})}
+                </div>}
+            </>:<></>
+        } */}
+
             
         {/* {loading ? <Loading/> : 
         <section className={classes.frame1}>
