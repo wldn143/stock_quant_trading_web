@@ -114,6 +114,9 @@ function ChartInfo(){
         setSearchMode(true);
     }
 
+    function delKeyword(){
+        setKeyword('');
+    }
     //검색어 포함하는 종목명을 배열로 filter
     useEffect(()=>{ 
         if(keyword!==''){
@@ -186,7 +189,7 @@ function ChartInfo(){
         <>
         <SearchBar>
         <InputBox onClick={onSearch} ref={wrapperRef} type='text' value={keyword} onChange={onChange} placeholder='종목명을 입력하세요'/>
-        <DeleteBtn/>
+        <DeleteBtn onClick={delKeyword}/>
         </SearchBar>
         {searchMode?<>{loading?<Loading/>:
         <>{result.length?<div ref={wrapperRef} style={{height:`${result.length*52}px`, borderRadius:'8px',boxShadow: '0px 5px 15px -5px #c8c8c8', width:'407px'}}>        
