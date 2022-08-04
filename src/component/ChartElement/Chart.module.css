@@ -1,0 +1,36 @@
+.frame1 {
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  margin-top: 50px;
+  position: absolute;
+  top: 200px;
+  z-index: 1;
+}
+
+.none {
+  display: none;
+}
+
+.item {
+  border: 1px solid #d8d8d8;
+  border-radius: 10px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+.firstblock {
+  display: flex;
+  flex-direction: row;
+}
+
+.firstblock .item {
+}
+
+.itemDetail {
+  display: flex;
+  flex-direction: row;
+}
+
+.itemPrice {
+  margin-left: 300px;
+}
