@@ -4,6 +4,7 @@ import DrawChart from "../HomeElement/DrawChart";
 import Loading from "../layout/Loading2";
 import styled from "styled-components";
 //로딩중에 검색어 입력하면 filter useEffect 처리 안됨
+//차트 3초마다, selectedstock이 바뀌면 리렌더링
 const SearchBar = styled.div`
   width: 405px;
   height: 42px;
@@ -74,7 +75,8 @@ function ChartInfo() {
   const [nameToCode, setNameToCode] = useState([]); //{종목명:코드} 객체
   const [stockNames, setStockNames] = useState([]); //종목명 배열
   const [stockCodes, setStockCodes] = useState([]); //코드 배열
-  const [selectedStock, setSelectedStock] = useState(["삼성전자"]); //선택된 종목
+  const [selectedStock, setSelectedStock] = useState(["삼성전자", "005930"]); //선택된 종목명,코드 배열
+  const stockRef = useRef(["삼성전자", "005930"]); //3초마다 데이터 가져오기위함. 현재 선택된 종목ref
   const [selectedCodePrice, setSelectedCodePrice] = useState([]); //선택된 종목 현재 가격
   let [loading, setLoading] = useState(true);
   let [chartDataObj1, setchartDataObj1] = useState(null);
@@ -132,10 +134,11 @@ function ChartInfo() {
   }, [keyword]);
 
   //종목 선택
-  function selectStock(e) {
-    setSelectedStock(e);
+  function selectStock(n, c) {
     setKeyword("");
     setSearchMode(false);
+    setSelectedStock([n, c]);
+    stockRef.current = [n, c];
     //새로고침 후에 기존검색 내역 가지고가기
   }
 
@@ -158,22 +161,44 @@ function ChartInfo() {
 
   /*Chart*/
 
-  //선택된 정목의 현재 가격 정보
   useEffect(() => {
-    fetch("http://54.215.210.171:8000/getPreview", {
-      method: "POST",
-      body: JSON.stringify({
-        code: selectedStock,
-      }),
-      headers: {
-        "Content-Type": "./application.json",
-      },
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        setSelectedCodePrice(data);
-      });
-  }, [selectedStock]);
+    setInterval(() => {
+      //선택된 정목의 현재 가격 정보
+      fetch("http://54.215.210.171:8000/getPreview", {
+        method: "POST",
+        body: JSON.stringify({
+          code: [stockRef.current[0]],
+        }),
+        headers: {
+          "Content-Type": "./application.json",
+        },
+      })
+        .then((response) => response.json())
+        .then((data) => {
+          setSelectedCodePrice(data);
+        });
+
+      //차트 데이터 받아오기
+      fetch("http://54.215.210.171:8000/getPrice", {
+        method: "POST",
+        body: JSON.stringify({
+          code: stockRef.current[1],
+          start: "2022-07-10",
+        }),
+        headers: {
+          "Content-Type": "application/json",
+        },
+      })
+        .then((response) => {
+          return response.json();
+        })
+        .then((data) => {
+          setchartData1(data);
+          setLoading(false);
+        });
+      console.log("3초마다 렌더링");
+    }, 3000);
+  }, []);
 
   /*차트 그리기*/
   let [chartData1, setchartData1] = useState({
@@ -192,27 +217,6 @@ function ChartInfo() {
       close: Object.values(chartData1.Close),
     });
   }
-
-  //차트 데이터 받아오기
-  useEffect(() => {
-    fetch("http://54.215.210.171:8000/getPrice", {
-      method: "POST",
-      body: JSON.stringify({
-        code: "005930",
-        start: "2022-07-10",
-      }),
-      headers: {
-        "Content-Type": "application/json",
-      },
-    })
-      .then((response) => {
-        return response.json();
-      })
-      .then((data) => {
-        setchartData1(data);
-        setLoading(false);
-      });
-  }, [selectedStock]);
 
   useEffect(() => {
     parsing1();
@@ -255,7 +259,7 @@ function ChartInfo() {
                       <ResultBtn
                         key={stock.code}
                         onClick={() => {
-                          selectStock(stock.name);
+                          selectStock(stock.name, stock.code);
                         }}
                       >
                         <NameContainer>{stock.name}</NameContainer>
