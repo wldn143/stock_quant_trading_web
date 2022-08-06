@@ -42,7 +42,7 @@ function SearchLayout(){
     const uuid = sessionStorage.getItem('uuid');        // uuid sessionStorage에서 불러오기
 
     /* 즐겨찾기 목록 dummy data */
-    const [tostr, settostr] = useState(['삼성전자','SK하이닉스'])  
+    const [tostr, settostr] = useState([])  
 
 
     
@@ -66,24 +66,28 @@ function SearchLayout(){
 
 
     //  즐겨찾기 버튼 눌렀을때의 동작
-    function EnjoySearchHandler(item){             
+    function EnjoySearchHandler(item){           
 
         if(!tostr.includes(item)){      
-            settostr([...tostr, item]);
+            settostr([...tostr, item]); 
         }
         else{
             settostr(tostr.filter(x=> x !== item))
         }
-
-        console.log(tostr);
-        
-        // fetch(`http://haniumproject.com/setUserFavList/${uuid}/${tostr}`)
-        // .then(response => response.json())
-        // .then(data => {
-        //     console.log(data);
-        //     console.log("done fetch2");
-        // });
     }
+
+    //  tostr 변할때마다, 변한 tostr 배열 서버에 보내기
+    useEffect(()=>{
+
+        fetch(`http://haniumproject.com/setUserFavList/${uuid}/${tostr}`)
+        .then(response => response.json())
+        .then(data => {
+            console.log(data);
+            console.log(tostr);
+            console.log("done fetch2");
+        });
+
+    },[tostr]);
 
 
     // 즐겨찾기 목록에 있는 주식이름인지 체크하는 함수. item이 즐겨찾기 목록에 있는 주식이름이라면, 버튼색깔 변경
@@ -105,6 +109,7 @@ function SearchLayout(){
         .then( data => {
             console.log(data)
             settostr(data.favlist.split(","));
+            console.log(tostr);
         });
     },[])
 
