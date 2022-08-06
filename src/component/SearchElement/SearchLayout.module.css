@@ -27,6 +27,11 @@
 }
 
 
+.stocklist:hover{
+    background-color: #dbcbca;
+}
+
+
 .pricelist{
     display: flex;
     justify-content: space-between;

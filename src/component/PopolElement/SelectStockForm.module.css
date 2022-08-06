@@ -44,6 +44,10 @@
     cursor: pointer;
 }
 
+.Formstocklist:hover{
+    background-color: #dbcbca;
+}
+
 .Formpricelist{
     display: flex;
     justify-content: space-between;
