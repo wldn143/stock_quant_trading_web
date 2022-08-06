@@ -140,11 +140,6 @@ function SearchLayout(){
     },[SearchresultStockList]);
 
 
-
-
-
-
-
     //  getPreview를 통해서, 주식이름 리스트의 가격리스트를 받아오는 로딩시간 너무 길다.
     //  따라서, 비동기적 구현으로  주식이름 리스트를 먼저띄운뒤,    로딩스피너를 통해   가격리스트에 로딩상태를 띄운다.
     //  가격리스트가 수신 완료되면,  로딩상태를 가격리스트로 치환한다!!
@@ -158,11 +153,11 @@ function SearchLayout(){
     return(
         <>
             
-            <SearchBar setsearchResult={setSearchresultStockList}/>
+            <SearchBar setsearchResult={setSearchresultStockList} />
              
-            <section className={classes.Searchbox} >
+            <section className={classes.Searchbox}>
                 <ul className={classes.SearchresultStockList}>
-                    <section>
+                    <section className={classes.sec1}>
                         {  SearchresultStockList.map((item)=>{
                             return(
                                 <li onClick={()=> selectHandler(item)} className={classes.stocklist}>
@@ -175,7 +170,7 @@ function SearchLayout(){
                     </section>
 
                     {isLoading? 
-                        <section>
+                        <section className={classes.sec2}>
                             { SearchresultStockList.map((item) =>{
                             return(<> 
                                 <li className={classes.pricelist}>
@@ -189,7 +184,7 @@ function SearchLayout(){
                         
                         :
 
-                        <section>
+                        <section className={classes.sec2}>
                             { SearchresultPriceList.map((price) =>{
                             return(<> 
                                 <li className={classes.pricelist}>
@@ -203,7 +198,7 @@ function SearchLayout(){
                         </section>
                     }    
 
-                    <section>
+                    <section className={classes.sec3}>
                         { SearchresultStockList.map((item) => {
                             return(<>
                                 <li className={classes.btnlist}>
