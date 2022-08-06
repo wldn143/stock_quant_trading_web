@@ -2,6 +2,7 @@ import SearchBar from "../SearchElement/SearchBar";
 import classes from "./SelectStockForm.module.css"
 
 import {useEffect, useState} from 'react';
+import { useLocation } from "react-router-dom";
 import Modal from "./Modals/Modal";
 import ErrorModal from "./Modals/ErrorModal";
 
@@ -36,23 +37,19 @@ const EnjoybtnOff=styled.button`
 
 function SelectStockForm(){
 
-    let [isLoadingcart, setisLoadingcart] = useState(false);
+    let location = useLocation();
 
+    let [isLoadingcart, setisLoadingcart] = useState(false);
     const uuid = sessionStorage.getItem('uuid');        // uuid sessionStorage에서 불러오기
 
     /* 즐겨찾기 목록 dummy data */
-    const [tostr, settostr] = useState(['삼성전자','SK하이닉스']) 
+    const [tostr, settostr] = useState([]) 
 
 
     const [modalOpen, setModalOpen] = useState(false);             // 자본선택 modal 창 관리 변수
-
     const [searchResultStock, setsearchResultStock] = useState(['삼성전자', 'LG에너지솔루션', 'SK하이닉스', '삼성바이오로직스', '삼성전자우', 'LG화학', 'NAVER', '현대차', '삼성SDI', '기아']);         //  검색리스트의 stockname 저장 변수
     const [searchResultPrice, setsearchResultPrice] = useState([]);        //  검색리스트의 price 저장 변수
-
-
     const [stockCartStock, setstockCartStock] = useState([]);             //   장바구니리스트 stockname 저장 변수
-
-
     const [ErrormodalOpen, setErrormodalOpen] = useState(false);        //  장바구니 비었는데 선택완료 버튼 눌렀을때, 에러모달
 
 
@@ -102,6 +99,7 @@ function SelectStockForm(){
 
 
     //  즐겨찾기 버튼 눌렀을때의 동작
+
     function EnjoySearchHandler(item){             
 
         if(!tostr.includes(item)){      
@@ -110,16 +108,20 @@ function SelectStockForm(){
         else{
             settostr(tostr.filter(x=> x !== item))
         }
-
-        console.log(tostr);
-        
-        // fetch(`http://haniumproject.com/setUserFavList/${uuid}/${tostr}`)
-        // .then(response => response.json())
-        // .then(data => {
-        //     console.log(data);
-        //     console.log("done fetch2");
-        // });
     }
+
+
+    // tostr배열 변경될때 마다, 서버로 변경된 배열 보내기
+
+    useEffect(()=>{
+        fetch(`http://haniumproject.com/setUserFavList/${uuid}/${tostr}`)
+        .then(response => response.json())
+        .then(data => {
+            console.log(data);
+            console.log("done fetch2");
+        });
+    },[tostr])
+
 
 
     function deleteHandler(item){             //   장바구니 x 버튼 눌렀을때
@@ -127,8 +129,6 @@ function SelectStockForm(){
         setstockCartStock(stockCartStock.filter( x => x !== item ));     // 주식이름 리스트에서 filter로 제거
 
     }
-
-
 
 
     // 검색페이지 최초 랜더링시, 즐겨찾기 목록 서버에서 가져옴.
@@ -139,6 +139,7 @@ function SelectStockForm(){
             console.log(data)
             settostr(data.favlist.split(","));
         });
+
     },[])
 
 
@@ -263,7 +264,7 @@ function SelectStockForm(){
                 
                 </button>
                 
-                <Modal open={modalOpen} close={closeModal}>
+                <Modal open={modalOpen} close={closeModal} strategy={location.state.strategy} cartlist={stockCartStock}>
                     
                 </Modal>
                 <ErrorModal open={ErrormodalOpen} close={CloseErrormodal} main="장바구니에 주식을 추가하세요" header="error"></ErrorModal>

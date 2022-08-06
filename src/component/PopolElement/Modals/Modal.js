@@ -13,7 +13,7 @@ import {useNavigate} from 'react-router-dom';
 
 const Modal = (props) => {
   
-  const { open, close } = props;
+  const { open, close, strategy, cartlist } = props;
   const [balance, Setbalance] = useState(null);
   const amount = useRef();
   const navigate = useNavigate();
@@ -53,6 +53,7 @@ const Modal = (props) => {
   
   useEffect(()=>{
     
+    
     fetch('https://stock-a95d6-default-rtdb.firebaseio.com/.json',{
       method: 'POST',
       body:JSON.stringify({
@@ -90,12 +91,14 @@ const Modal = (props) => {
 
 
 
-    // 금액 조건 만족시, 서버로 설정금액 전송.  성공모달 띄우기
+    // 금액 조건 만족시, 서버로 전략종류, 주식리스트, 설정금액 전송.  성공모달 띄우기
 
     fetch('https://stock-a95d6-default-rtdb.firebaseio.com/.json',{
       method: 'POST',
       body:JSON.stringify({
-        'amount' : {enteredamount}
+        'strategy' : {strategy},
+        'cartlist' : {cartlist},
+        'amount' : {enteredamount},
       }),
       headers:{
         'Content-Type' : 'application/json'
