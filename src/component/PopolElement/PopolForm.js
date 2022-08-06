@@ -32,9 +32,6 @@ const SelectButton=styled.button`
 
 `
 
-// TODO 1 : 전략에 대한 정보 기입. (Ratio는 서버에서 받아올 예정)
-// TODO 2 : 전략 선택정보 서버로 어떻게 보낼것인지. 그리고 그 반환값처리
-
 function PopolForm(){
 
     

@@ -28,9 +28,7 @@ const EnjoybtnOff=styled.button`
 
 
 
-// TODO 1 : 서버에서 FavList 배열형태 tostr 에 저장
-
-// TODO 2 : 주식리스트, 주식가격, 즐겨찾기 버튼   하나의 바로 보이게 디자인 수정
+// TODO 1 : 주식리스트 hover 처리
 
 
 function SearchLayout(){ 

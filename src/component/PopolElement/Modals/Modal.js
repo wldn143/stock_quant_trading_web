@@ -9,7 +9,6 @@ import {useNavigate} from 'react-router-dom';
 
 
 // TODO 1 : 서버에서 잔고정보 받아오기
-// TODO 2 : 서버에 설정금액 보내는 로직
 
 const Modal = (props) => {
   
