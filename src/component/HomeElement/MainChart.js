@@ -161,14 +161,13 @@ function MainChart(){
         }) 
 
 
-        // 자동완성에 필요한 주식 이름들 받아오기. SessionStorage StockNames 에 저장.
-
-        fetch('http://54.215.210.171:8000/getNames')
-        .then( response =>  response.json() )
-        .then( data => {
-            sessionStorage.setItem('StockNames', JSON.stringify(data));
-            setLoading(false);
-        })
+        fetch(`http://54.215.210.171:8000/getNameToCode`)
+        .then((response) => response.json())
+        .then((data) => {
+          sessionStorage.setItem('StockNames', Object.keys(data)); //전체 종목명 배열
+          sessionStorage.setItem('StockCodes', Object.values(data)); //전체 코드 배열
+          setLoading(false);
+        });
    
 
     },[])

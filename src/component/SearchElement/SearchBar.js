@@ -15,15 +15,16 @@ function SearchBar({setsearchResult}){
     let [serverData, setserverData] = useState([]);
 
 
-
-
+    let [autoboxtemp, setautoboxtemp] = useState(true);  // 자동완성 목록 띄울지 안띄울지 조정값
     let [autoSearchResult, setautoSearchResult] = useState([]);  // 자동완성 결과 저장 변수
     let [inputValue, setinputValue] = useState();      //  검색값 저장 변수
    
-    
+    function deleteautobox(){
+        setautoboxtemp(false);
+    }
 
     function inputChange(e){            // inputChange시 핸들링.   함수재활용 위해서, 애초에 e.target.value로 넘겨받음
-
+        setautoboxtemp(true);
         setinputValue(e);          
         let data = e;
 
@@ -67,38 +68,39 @@ function SearchBar({setsearchResult}){
 
     useEffect(()=>{             // sessionStorage 에서, 주식이름들 데이터 가져오기
         let temp = sessionStorage.getItem('StockNames');
-        temp = JSON.parse(temp);        // 배열형태로 변환 필요
+        temp = temp.split(",");
         setserverData(temp);
-        
     },[])
 
 
     return(
 
-        <section className={classes.searchbox}>
-            <input
-                type="text"
-                className={classes.searchbar}
-                placeholder="검색어를 입력하세요"
-                value={inputValue}
-                onKeyPress={onKeyPress}
-                onChange={(e)=>inputChange(e.target.value)}
-            >
-            </input>
-            <button className={classes.searchbtn} onClick={onClick}>🔍︎</button>
-
-            {autoSearchResult.map((data) => {
-                return(<>
-                        <section className={classes.autoSearchResultList} onClick ={() => autoClick(data)}>
-                            <span className={classes.autoItem}>{data}</span>
-                        
-                        </section>
-                    </>                    
-                )
-
-
-
-            })}
+        <section className={classes.searchframe} onClick={deleteautobox}>
+            <section className={classes.searchbox}>
+                <input
+                    type="text"
+                    className={classes.searchbar}
+                    placeholder="종목명을 입력하세요"
+                    value={inputValue}
+                    onKeyPress={onKeyPress}
+                    onChange={(e)=>inputChange(e.target.value)}
+                >
+                </input>
+                <button className={classes.searchbtn} onClick={onClick}>🔍︎</button>
+            </section>
+            
+            <section className={classes.autobox}>
+                {autoboxtemp && autoSearchResult.map((data) => {
+                    return(<>
+                            <section className={classes.autoSearchResultList} onClick ={() => autoClick(data)}>
+                                <span className={classes.autoItem}>{data}</span>
+                            
+                            </section>
+                        </>                    
+                    )
+                })}
+            </section>
+            
             
         </section>
 
