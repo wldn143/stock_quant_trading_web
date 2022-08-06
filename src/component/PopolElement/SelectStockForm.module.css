@@ -31,11 +31,9 @@
     
     list-style: none;
     background-color: #f1f1f1;
-    border: 2px solid #f1f1f1;
-    border-right: none;
-    border-radius: 10px;
+    border-radius: 10px 0 0 10px;
+    border: none;
     padding: 20px 0px;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
     width:500px;
     height: 25px;
     max-width: 700px;
@@ -52,11 +50,8 @@
     
     list-style: none;
     background-color: #f1f1f1;
-    border: 2px solid #f1f1f1;
-    border-left: none;
-    border-radius: 10px;
+    border: none;
     padding: 20px 0px;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
     width:150px;
     height:25px;
     max-width: 700px;
@@ -71,11 +66,9 @@
     
     list-style: none;
     background-color: #f1f1f1;
-    border: 2px solid #f1f1f1;
-    border-left: none;
-    border-radius: 10px;
+    border: none;
+    border-radius: 0 10px 10px 0;
     padding: 20px 0px;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
     width:50px;
     height:25px;
     max-width: 700px;
@@ -84,17 +77,31 @@
     font-weight: bold;
 }
 
+.CartStockList{
+    display: flex;
+    justify-content: space-between;
+    
+    list-style: none;
+    background-color: #f1f1f1;
+    border: 2px solid #f1f1f1;
+    border-radius: 10px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+    padding: 20px 0px;
+    width:500px;
+    height: 25px;
+    max-width: 700px;
+    margin: 0 auto;
+    margin-top: 5px;
+    font-weight: bold;
+
+    cursor: pointer;
+}
+
 .deletebtn{
     cursor:pointer;
 }
 
-.Formstocklist:hover{
-    border: 2px solid grey;
-}
 
-.CartStockList:hover{
-    border: 2px solid grey;
-}
 
 .submitbtn{
     

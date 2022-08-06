@@ -243,7 +243,7 @@ function SelectStockForm(){
                     <section>
                         {stockCartStock.map((item)=>{
                             return(
-                                <li className={classes.Formstocklist}>
+                                <li className={classes.Cartstocklist}>
                                     <span>{item}</span> 
                                     <button className={classes.deletebtn} onClick={()=>deleteHandler(item)}>x</button> 
                                 </li>
