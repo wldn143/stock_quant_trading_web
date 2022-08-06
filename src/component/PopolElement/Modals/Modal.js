@@ -89,7 +89,11 @@ const Modal = (props) => {
       return;
     }
 
-
+    console.log(JSON.stringify({
+      'strategy' : strategy.sttData,
+      'cartlist' : cartlist,
+      'amount' : enteredamount,
+    }))
 
     // 금액 조건 만족시, 서버로 전략종류, 주식리스트, 설정금액 전송.  성공모달 띄우기
 
