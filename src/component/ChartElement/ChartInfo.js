@@ -108,7 +108,7 @@ function ChartInfo() {
   const [stockCodes, setStockCodes] = useState([]); //코드 배열
   const { state } = useLocation();
   const [selectedStock, setSelectedStock] = useState(
-    state.code === null ? ["삼성전자", "005930"] : [state.code]
+    state === null ? ["삼성전자", "005930"] : [state.code]
   ); //선택된 종목명,코드 배열.. 검색 페이지에서 종목 가져올 수 있음
   const stockRef = useRef(["삼성전자", "005930"]); //3초마다 데이터 가져오기위함. 현재 선택된 종목ref
   const [selectedCodePrice, setSelectedCodePrice] = useState([]); //선택된 종목 현재 가격
@@ -120,8 +120,6 @@ function ChartInfo() {
   let stockInfo = [];
   const [tostr, settostr] = useState(["삼성전자", "현대차"]); //즐겨찾기 목록
   const uuid = sessionStorage.getItem("uuid");
-
-  console.log(selectedStock[0]); //{code:'삼성전자'}
 
   /*SearchBar */
 
@@ -224,44 +222,49 @@ function ChartInfo() {
   }
   /*Chart*/
 
-  // useEffect(() => {
-  //   setInterval(() => {
-  //     //선택된 정목의 현재 가격 정보
-  //     fetch("http://54.215.210.171:8000/getPreview", {
-  //       method: "POST",
-  //       body: JSON.stringify({
-  //         code: [stockRef.current[0]],
-  //       }),
-  //       headers: {
-  //         "Content-Type": "./application.json",
-  //       },
-  //     })
-  //       .then((response) => response.json())
-  //       .then((data) => {
-  //         setSelectedCodePrice(data);
-  //       });
+  const interval = useRef(null);
+  const chartData = () => {
+    fetch("http://54.215.210.171:8000/getPreview", {
+      method: "POST",
+      body: JSON.stringify({
+        code: [stockRef.current[0]],
+      }),
+      headers: {
+        "Content-Type": "./application.json",
+      },
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        setSelectedCodePrice(data);
+      });
 
-  //     //차트 데이터 받아오기
-  //     fetch("http://54.215.210.171:8000/getPrice", {
-  //       method: "POST",
-  //       body: JSON.stringify({
-  //         code: stockRef.current[1],
-  //         start: "2022-07-10",
-  //       }),
-  //       headers: {
-  //         "Content-Type": "application/json",
-  //       },
-  //     })
-  //       .then((response) => {
-  //         return response.json();
-  //       })
-  //       .then((data) => {
-  //         setchartData1(data);
-  //         setLoading(false);
-  //       });
-  //     console.log("3초마다 렌더링");
-  //   }, 3000);
-  // }, []);
+    //차트 데이터 받아오기
+    fetch("http://54.215.210.171:8000/getPrice", {
+      method: "POST",
+      body: JSON.stringify({
+        code: stockRef.current[1],
+        start: "2022-07-10",
+      }),
+      headers: {
+        "Content-Type": "application/json",
+      },
+    })
+      .then((response) => {
+        return response.json();
+      })
+      .then((data) => {
+        setchartData1(data);
+        setLoading(false);
+      });
+    console.log(stockRef.current[0]);
+  };
+
+  useEffect(() => {
+    interval.current = setInterval(chartData, 3000);
+    return () => {
+      clearInterval(interval.current);
+    };
+  }, []);
 
   /*차트 그리기*/
   let [chartData1, setchartData1] = useState({
