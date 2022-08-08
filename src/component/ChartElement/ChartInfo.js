@@ -3,6 +3,9 @@ import classes from "./Chart.module.css";
 import DrawChart from "../HomeElement/DrawChart";
 import Loading from "../layout/Loading2";
 import styled from "styled-components";
+import filledStar from "./filledStar.png";
+import emptyStar from "./emptyStar.png";
+
 //로딩중에 검색어 입력하면 filter useEffect 처리 안됨
 //차트 3초마다, selectedstock이 바뀌면 리렌더링
 const SearchBar = styled.div`
@@ -69,6 +72,33 @@ const NameContainer = styled.div`
   font-size: 17px;
   margin: 5px 0 0 45px;
 `;
+const FavContainer = styled.div`
+  height: 50px;
+  width: 700px;
+  display: flex;
+  border: 1px solid #f2f2f2;
+  align-items: center;
+  justify-content: end;
+`;
+const FavBtn = styled.button`
+  cursor: pointer;
+  border: none;
+  background-color: transparent;
+  padding-top: 3px;
+  &:hover {
+    background-color: #f2f2f2;
+    border-radius: 5px;
+  }
+`;
+const ChartContainer = styled.div`
+  border: 1px solid #f2f2f2;
+  border-top: none;
+  height: 500px;
+  width: 700px;
+  display: flex;
+  justify-content: center;
+`;
+
 function ChartInfo() {
   const [keyword, setKeyword] = useState(""); //검색키워드
   const [result, setResult] = useState(); //검색된 키워드를 포함하는 종목 배열(자동완성 리스트)
@@ -84,6 +114,8 @@ function ChartInfo() {
   const wrapperRef = useRef(null);
   useOutsideAlerter(wrapperRef);
   let stockInfo = [];
+  const [tostr, settostr] = useState(["삼성전자", "현대차"]); //즐겨찾기 목록
+  const uuid = sessionStorage.getItem("uuid");
 
   /*SearchBar */
 
@@ -159,46 +191,71 @@ function ChartInfo() {
     });
   }
 
+  /* 즐겨찾기 */
+  //유저의 즐겨찾기 목록 가져오기
+  useEffect(() => {
+    fetch(`http://haniumproject.com/getUserAccount/${uuid}`)
+      .then((response) => response.json())
+      .then((data) => {
+        settostr(data.favlist.split(","));
+      });
+  }, []);
+
+  //tostr 서버에 전송?
+  useEffect(() => {
+    fetch(`http://haniumproject.com/setUserFavList/${uuid}/${tostr}`).then(
+      (response) => response.json()
+    );
+  }, [tostr]);
+
+  //즐겨찾기 버튼 클릭시
+  function EnjoySearchHandler(e) {
+    if (!tostr.includes(e)) {
+      settostr([...tostr, e]);
+    } else {
+      settostr(tostr.filter((x) => x !== e));
+    }
+  }
   /*Chart*/
 
-  useEffect(() => {
-    setInterval(() => {
-      //선택된 정목의 현재 가격 정보
-      fetch("http://54.215.210.171:8000/getPreview", {
-        method: "POST",
-        body: JSON.stringify({
-          code: [stockRef.current[0]],
-        }),
-        headers: {
-          "Content-Type": "./application.json",
-        },
-      })
-        .then((response) => response.json())
-        .then((data) => {
-          setSelectedCodePrice(data);
-        });
+  // useEffect(() => {
+  //   setInterval(() => {
+  //     //선택된 정목의 현재 가격 정보
+  //     fetch("http://54.215.210.171:8000/getPreview", {
+  //       method: "POST",
+  //       body: JSON.stringify({
+  //         code: [stockRef.current[0]],
+  //       }),
+  //       headers: {
+  //         "Content-Type": "./application.json",
+  //       },
+  //     })
+  //       .then((response) => response.json())
+  //       .then((data) => {
+  //         setSelectedCodePrice(data);
+  //       });
 
-      //차트 데이터 받아오기
-      fetch("http://54.215.210.171:8000/getPrice", {
-        method: "POST",
-        body: JSON.stringify({
-          code: stockRef.current[1],
-          start: "2022-07-10",
-        }),
-        headers: {
-          "Content-Type": "application/json",
-        },
-      })
-        .then((response) => {
-          return response.json();
-        })
-        .then((data) => {
-          setchartData1(data);
-          setLoading(false);
-        });
-      console.log("3초마다 렌더링");
-    }, 3000);
-  }, []);
+  //     //차트 데이터 받아오기
+  //     fetch("http://54.215.210.171:8000/getPrice", {
+  //       method: "POST",
+  //       body: JSON.stringify({
+  //         code: stockRef.current[1],
+  //         start: "2022-07-10",
+  //       }),
+  //       headers: {
+  //         "Content-Type": "application/json",
+  //       },
+  //     })
+  //       .then((response) => {
+  //         return response.json();
+  //       })
+  //       .then((data) => {
+  //         setchartData1(data);
+  //         setLoading(false);
+  //       });
+  //     console.log("3초마다 렌더링");
+  //   }, 3000);
+  // }, []);
 
   /*차트 그리기*/
   let [chartData1, setchartData1] = useState({
@@ -277,32 +334,46 @@ function ChartInfo() {
       ) : (
         <></>
       )}
-
-      {selectedStock ? (
-        <>
+      <div style={{ position: "absolute", top: "200px", zIndex: "1" }}>
+        <FavContainer>
           {loading ? (
-            <Loading />
+            <FavBtn>
+              <img src={emptyStar} width={25} height={25} />
+            </FavBtn>
           ) : (
-            <section className={classes.frame1}>
-              <section className={classes.firstblock}>
-                <section className={classes.item}>
-                  <section className={classes.itemDetail}>
-                    <h2>{selectedStock}</h2>
-                    <h2 className={classes.itemPrice}>
-                      {selectedCodePrice[0]}
-                    </h2>
-                  </section>
-                  <section className={classes.chart}>
-                    {chartDataObj1 && <DrawChart props={chartDataObj1} />}
+            <FavBtn onClick={() => EnjoySearchHandler(selectedStock[0])}>
+              {tostr.includes(selectedStock[0]) ? (
+                <img src={filledStar} width={25} height={25} />
+              ) : (
+                <img src={emptyStar} width={25} height={25} />
+              )}
+            </FavBtn>
+          )}
+        </FavContainer>
+        <ChartContainer>
+          {loading ? (
+            <></>
+          ) : (
+            <>
+              <section className={classes.frame1}>
+                <section className={classes.firstblock}>
+                  <section className={classes.item}>
+                    <section className={classes.itemDetail}>
+                      <h2>{selectedStock}</h2>
+                      <h2 className={classes.itemPrice}>
+                        {selectedCodePrice[0]}
+                      </h2>
+                    </section>
+                    <section className={classes.chart}>
+                      {chartDataObj1 && <DrawChart props={chartDataObj1} />}
+                    </section>
                   </section>
                 </section>
               </section>
-            </section>
+            </>
           )}
-        </>
-      ) : (
-        <></>
-      )}
+        </ChartContainer>
+      </div>
     </>
   );
 }
