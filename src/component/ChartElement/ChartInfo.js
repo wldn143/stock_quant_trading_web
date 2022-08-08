@@ -5,6 +5,7 @@ import Loading from "../layout/Loading2";
 import styled from "styled-components";
 import filledStar from "./filledStar.png";
 import emptyStar from "./emptyStar.png";
+import { useLocation } from "react-router-dom";
 
 //로딩중에 검색어 입력하면 filter useEffect 처리 안됨
 //차트 3초마다, selectedstock이 바뀌면 리렌더링
@@ -76,7 +77,7 @@ const FavContainer = styled.div`
   height: 50px;
   width: 700px;
   display: flex;
-  border: 1px solid #f2f2f2;
+  border: 1px solid #e3e3e3;
   align-items: center;
   justify-content: end;
 `;
@@ -91,7 +92,7 @@ const FavBtn = styled.button`
   }
 `;
 const ChartContainer = styled.div`
-  border: 1px solid #f2f2f2;
+  border: 1px solid #e3e3e3;
   border-top: none;
   height: 500px;
   width: 700px;
@@ -105,7 +106,10 @@ function ChartInfo() {
   const [nameToCode, setNameToCode] = useState([]); //{종목명:코드} 객체
   const [stockNames, setStockNames] = useState([]); //종목명 배열
   const [stockCodes, setStockCodes] = useState([]); //코드 배열
-  const [selectedStock, setSelectedStock] = useState(["삼성전자", "005930"]); //선택된 종목명,코드 배열
+  const { state } = useLocation();
+  const [selectedStock, setSelectedStock] = useState(
+    state.code === null ? ["삼성전자", "005930"] : [state.code]
+  ); //선택된 종목명,코드 배열.. 검색 페이지에서 종목 가져올 수 있음
   const stockRef = useRef(["삼성전자", "005930"]); //3초마다 데이터 가져오기위함. 현재 선택된 종목ref
   const [selectedCodePrice, setSelectedCodePrice] = useState([]); //선택된 종목 현재 가격
   let [loading, setLoading] = useState(true);
@@ -116,6 +120,8 @@ function ChartInfo() {
   let stockInfo = [];
   const [tostr, settostr] = useState(["삼성전자", "현대차"]); //즐겨찾기 목록
   const uuid = sessionStorage.getItem("uuid");
+
+  console.log(selectedStock[0]); //{code:'삼성전자'}
 
   /*SearchBar */
 
