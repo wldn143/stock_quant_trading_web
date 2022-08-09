@@ -86,8 +86,8 @@ function PopolForm(){
         fetch('http://haniumproject.com/getModelInfo')
         .then(response=> response.json())
         .then(data => {
-            console.log(data);
             setsttList(data);
+            console.log('전략데이터 불러오기 성공');
         })
     },[])
 
