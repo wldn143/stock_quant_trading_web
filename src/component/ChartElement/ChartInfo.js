@@ -103,9 +103,9 @@ const ChartContainer = styled.div`
 function ChartInfo() {
   const [keyword, setKeyword] = useState(""); //검색키워드
   const [result, setResult] = useState(); //검색된 키워드를 포함하는 종목 배열(자동완성 리스트)
-  const [nameToCode, setNameToCode] = useState([]); //{종목명:코드} 객체
-  const [stockNames, setStockNames] = useState([]); //종목명 배열
-  const [stockCodes, setStockCodes] = useState([]); //코드 배열
+  //const [nameToCode, setNameToCode] = useState([]); //{종목명:코드} 객체
+  //const [stockNames, setStockNames] = useState([]); //종목명 배열
+  //const [stockCodes, setStockCodes] = useState([]); //코드 배열
   const { state } = useLocation();
   const [selectedStock, setSelectedStock] = useState(
     state === null ? ["삼성전자", "005930"] : [state.code]
@@ -119,34 +119,43 @@ function ChartInfo() {
   const [searchMode, setSearchMode] = useState(false);
   const wrapperRef = useRef(null);
   useOutsideAlerter(wrapperRef);
-  let stockInfo = [];
+  const [stockInfo, setStockInfo] = useState([]);
   const [tostr, settostr] = useState([]); //즐겨찾기 목록
   const uuid = sessionStorage.getItem("uuid");
-
+  let stockNames = sessionStorage.getItem("StockNames");
+  let stockCodes = sessionStorage.getItem("StockCodes");
+  stockNames = stockNames.split(",");
+  stockCodes = stockCodes.split(",");
   /*SearchBar */
 
-  //전체 종목명, 코드 데이터 받아오기
   useEffect(() => {
-    if (
-      nameToCode.length === 0 ||
-      stockCodes.length === 0 ||
-      stockNames.length === 0
-    ) {
-      setLoading(true);
-      fetch(`http://54.215.210.171:8000/getNameToCode`)
-        .then((response) => response.json())
-        .then((data) => {
-          setNameToCode(data);
-          setStockNames(Object.keys(nameToCode)); //전체 종목명 배열
-          setStockCodes(Object.values(nameToCode)); //전체 코드 배열
-        });
-    } else {
-      for (let i = 0; i < stockNames.length; i++) {
-        stockInfo[i] = { name: stockNames[i], code: stockCodes[i] };
-      }
-      setLoading(false);
+    for (let i = 0; i < stockNames.length; i++) {
+      stockInfo[i] = { name: stockNames[i], code: stockCodes[i] };
     }
-  });
+  }, []);
+
+  //전체 종목명, 코드 데이터 받아오기
+  // useEffect(() => {
+  //   if (
+  //     nameToCode.length === 0 ||
+  //     stockCodes.length === 0 ||
+  //     stockNames.length === 0
+  //   ) {
+  //     setLoading(true);
+  //     fetch(`http://54.215.210.171:8000/getNameToCode`)
+  //       .then((response) => response.json())
+  //       .then((data) => {
+  //         setNameToCode(data);
+  //         setStockNames(Object.keys(nameToCode)); //전체 종목명 배열
+  //         setStockCodes(Object.values(nameToCode)); //전체 코드 배열
+  //       });
+  //   } else {
+  //     for (let i = 0; i < stockNames.length; i++) {
+  //       stockInfo[i] = { name: stockNames[i], code: stockCodes[i] };
+  //     }
+  //     setLoading(false);
+  //   }
+  // });
 
   //검색어처리
   const onChange = (e) => {
@@ -312,40 +321,34 @@ function ChartInfo() {
 
       {searchMode ? (
         <>
-          {loading ? (
-            <Loading />
+          {result.length ? (
+            <div
+              ref={wrapperRef}
+              style={{
+                position: "relative",
+                zIndex: "2",
+                height: `${result.length * 52}px`,
+                borderRadius: "8px",
+                boxShadow: "0px 5px 15px -5px #c8c8c8",
+                width: "407px",
+              }}
+            >
+              {result.map((stock) => {
+                return (
+                  <ResultBtn
+                    key={stock.code}
+                    onClick={() => {
+                      selectStock(stock.name, stock.code);
+                    }}
+                  >
+                    <NameContainer>{stock.name}</NameContainer>
+                    <CodeContainer>{stock.code}</CodeContainer>
+                  </ResultBtn>
+                );
+              })}
+            </div>
           ) : (
-            <>
-              {result.length ? (
-                <div
-                  ref={wrapperRef}
-                  style={{
-                    position: "relative",
-                    zIndex: "2",
-                    height: `${result.length * 52}px`,
-                    borderRadius: "8px",
-                    boxShadow: "0px 5px 15px -5px #c8c8c8",
-                    width: "407px",
-                  }}
-                >
-                  {result.map((stock) => {
-                    return (
-                      <ResultBtn
-                        key={stock.code}
-                        onClick={() => {
-                          selectStock(stock.name, stock.code);
-                        }}
-                      >
-                        <NameContainer>{stock.name}</NameContainer>
-                        <CodeContainer>{stock.code}</CodeContainer>
-                      </ResultBtn>
-                    );
-                  })}
-                </div>
-              ) : (
-                <></>
-              )}
-            </>
+            <></>
           )}
         </>
       ) : (
