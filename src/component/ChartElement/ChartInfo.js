@@ -3,6 +3,10 @@ import classes from "./Chart.module.css";
 import DrawChart from "../HomeElement/DrawChart";
 import Loading from "../layout/Loading2";
 import styled from "styled-components";
+import filledStar from "./filledStar.png";
+import emptyStar from "./emptyStar.png";
+import { useLocation } from "react-router-dom";
+
 //로딩중에 검색어 입력하면 filter useEffect 처리 안됨
 //차트 3초마다, selectedstock이 바뀌면 리렌더링
 const SearchBar = styled.div`
@@ -69,49 +73,93 @@ const NameContainer = styled.div`
   font-size: 17px;
   margin: 5px 0 0 45px;
 `;
+const FavContainer = styled.div`
+  height: 50px;
+  width: 700px;
+  display: flex;
+  border: 1px solid #e3e3e3;
+  align-items: center;
+  justify-content: end;
+`;
+const FavBtn = styled.button`
+  cursor: pointer;
+  border: none;
+  background-color: transparent;
+  padding-top: 3px;
+  &:hover {
+    background-color: #f2f2f2;
+    border-radius: 5px;
+  }
+`;
+const ChartContainer = styled.div`
+  border: 1px solid #e3e3e3;
+  border-top: none;
+  height: 500px;
+  width: 700px;
+  display: flex;
+  justify-content: center;
+`;
+
 function ChartInfo() {
   const [keyword, setKeyword] = useState(""); //검색키워드
   const [result, setResult] = useState(); //검색된 키워드를 포함하는 종목 배열(자동완성 리스트)
-  const [nameToCode, setNameToCode] = useState([]); //{종목명:코드} 객체
-  const [stockNames, setStockNames] = useState([]); //종목명 배열
-  const [stockCodes, setStockCodes] = useState([]); //코드 배열
-  const [selectedStock, setSelectedStock] = useState(["삼성전자", "005930"]); //선택된 종목명,코드 배열
-  const stockRef = useRef(["삼성전자", "005930"]); //3초마다 데이터 가져오기위함. 현재 선택된 종목ref
+  //const [nameToCode, setNameToCode] = useState([]); //{종목명:코드} 객체
+  //const [stockNames, setStockNames] = useState([]); //종목명 배열
+  //const [stockCodes, setStockCodes] = useState([]); //코드 배열
+  const { state } = useLocation();
+  const [selectedStock, setSelectedStock] = useState(
+    state === null ? ["삼성전자", "005930"] : [state.code]
+  ); //선택된 종목명,코드 배열.. 검색 페이지에서 종목 가져올 수 있음
+  const stockRef = useRef(
+    state === null ? ["삼성전자", "005930"] : [state.code]
+  ); //3초마다 데이터 가져오기위함. 현재 선택된 종목ref
   const [selectedCodePrice, setSelectedCodePrice] = useState([]); //선택된 종목 현재 가격
   let [loading, setLoading] = useState(true);
   let [chartDataObj1, setchartDataObj1] = useState(null);
   const [searchMode, setSearchMode] = useState(false);
   const wrapperRef = useRef(null);
   useOutsideAlerter(wrapperRef);
-  let stockInfo = [];
-
+  const [stockInfo, setStockInfo] = useState([]);
+  const [tostr, settostr] = useState([]); //즐겨찾기 목록
+  const uuid = sessionStorage.getItem("uuid");
+  let stockNames = sessionStorage.getItem("StockNames");
+  let stockCodes = sessionStorage.getItem("StockCodes");
+  stockNames = stockNames.split(",");
+  stockCodes = stockCodes.split(",");
   /*SearchBar */
 
-  //전체 종목명, 코드 데이터 받아오기
   useEffect(() => {
-    if (
-      nameToCode.length === 0 ||
-      stockCodes.length === 0 ||
-      stockNames.length === 0
-    ) {
-      setLoading(true);
-      fetch(`http://54.215.210.171:8000/getNameToCode`)
-        .then((response) => response.json())
-        .then((data) => {
-          setNameToCode(data);
-          setStockNames(Object.keys(nameToCode)); //전체 종목명 배열
-          setStockCodes(Object.values(nameToCode)); //전체 코드 배열
-        });
-    } else {
-      for (let i = 0; i < stockNames.length; i++) {
-        stockInfo[i] = { name: stockNames[i], code: stockCodes[i] };
-      }
-      setLoading(false);
+    for (let i = 0; i < stockNames.length; i++) {
+      stockInfo[i] = { name: stockNames[i], code: stockCodes[i] };
     }
-  });
+  }, []);
+
+  //전체 종목명, 코드 데이터 받아오기
+  // useEffect(() => {
+  //   if (
+  //     nameToCode.length === 0 ||
+  //     stockCodes.length === 0 ||
+  //     stockNames.length === 0
+  //   ) {
+  //     setLoading(true);
+  //     fetch(`http://54.215.210.171:8000/getNameToCode`)
+  //       .then((response) => response.json())
+  //       .then((data) => {
+  //         setNameToCode(data);
+  //         setStockNames(Object.keys(nameToCode)); //전체 종목명 배열
+  //         setStockCodes(Object.values(nameToCode)); //전체 코드 배열
+  //       });
+  //   } else {
+  //     for (let i = 0; i < stockNames.length; i++) {
+  //       stockInfo[i] = { name: stockNames[i], code: stockCodes[i] };
+  //     }
+  //     setLoading(false);
+  //   }
+  // });
 
   //검색어처리
   const onChange = (e) => {
+    setSearchMode(true);
     setKeyword(e.target.value);
   };
   function onSearch() {
@@ -159,46 +207,76 @@ function ChartInfo() {
     });
   }
 
+  /* 즐겨찾기 */
+  //유저의 즐겨찾기 목록 가져오기
+  useEffect(() => {
+    fetch(`http://haniumproject.com/getUserAccount/${uuid}`)
+      .then((response) => response.json())
+      .then((data) => {
+        settostr(data.favlist.split(","));
+      });
+  }, []);
+
+  //tostr 서버에 전송?
+  useEffect(() => {
+    fetch(`http://haniumproject.com/setUserFavList/${uuid}/${tostr}`).then(
+      (response) => response.json()
+    );
+  }, [tostr]);
+
+  //즐겨찾기 버튼 클릭시
+  function EnjoySearchHandler(e) {
+    if (!tostr.includes(e)) {
+      settostr([...tostr, e]);
+    } else {
+      settostr(tostr.filter((x) => x !== e));
+    }
+  }
   /*Chart*/
 
-  useEffect(() => {
-    setInterval(() => {
-      //선택된 정목의 현재 가격 정보
-      fetch("http://54.215.210.171:8000/getPreview", {
-        method: "POST",
-        body: JSON.stringify({
-          code: [stockRef.current[0]],
-        }),
-        headers: {
-          "Content-Type": "./application.json",
-        },
-      })
-        .then((response) => response.json())
-        .then((data) => {
-          setSelectedCodePrice(data);
-        });
+  const interval = useRef(null);
+  const chartData = () => {
+    fetch("http://54.215.210.171:8000/getPreview", {
+      method: "POST",
+      body: JSON.stringify({
+        code: [stockRef.current[0]],
+      }),
+      headers: {
+        "Content-Type": "./application.json",
+      },
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        setSelectedCodePrice(data);
+      });
 
-      //차트 데이터 받아오기
-      fetch("http://54.215.210.171:8000/getPrice", {
-        method: "POST",
-        body: JSON.stringify({
-          code: stockRef.current[1],
-          start: "2022-07-10",
-        }),
-        headers: {
-          "Content-Type": "application/json",
-        },
+    //차트 데이터 받아오기
+    fetch("http://54.215.210.171:8000/getPrice", {
+      method: "POST",
+      body: JSON.stringify({
+        code: stockRef.current[0],
+        start: "2022-06-27",
+      }),
+      headers: {
+        "Content-Type": "application/json",
+      },
+    })
+      .then((response) => {
+        return response.json();
       })
-        .then((response) => {
-          return response.json();
-        })
-        .then((data) => {
-          setchartData1(data);
-          setLoading(false);
-        });
-      console.log("3초마다 렌더링");
-    }, 3000);
-  }, []);
+      .then((data) => {
+        setchartData1(data);
+        setLoading(false);
+      });
+  };
+
+  useEffect(() => {
+    chartData();
+    interval.current = setInterval(chartData, 10000);
+    return () => {
+      clearInterval(interval.current);
+    };
+  }, [stockRef.current[0]]);
 
   /*차트 그리기*/
   let [chartData1, setchartData1] = useState({
@@ -231,6 +309,11 @@ function ChartInfo() {
           type="text"
           value={keyword}
           onChange={onChange}
+          onKeyPress={(e) => {
+            if (e.key === "Enter") {
+              selectStock(result[0].name, result[0].code);
+            }
+          }}
           placeholder="종목명을 입력하세요"
         />
         <DeleteBtn onClick={delKeyword} />
@@ -238,71 +321,79 @@ function ChartInfo() {
 
       {searchMode ? (
         <>
-          {loading ? (
-            <Loading />
+          {result.length ? (
+            <div
+              ref={wrapperRef}
+              style={{
+                position: "relative",
+                zIndex: "2",
+                height: `${result.length * 52}px`,
+                borderRadius: "8px",
+                boxShadow: "0px 5px 15px -5px #c8c8c8",
+                width: "407px",
+              }}
+            >
+              {result.map((stock) => {
+                return (
+                  <ResultBtn
+                    key={stock.code}
+                    onClick={() => {
+                      selectStock(stock.name, stock.code);
+                    }}
+                  >
+                    <NameContainer>{stock.name}</NameContainer>
+                    <CodeContainer>{stock.code}</CodeContainer>
+                  </ResultBtn>
+                );
+              })}
+            </div>
           ) : (
-            <>
-              {result.length ? (
-                <div
-                  ref={wrapperRef}
-                  style={{
-                    position: "relative",
-                    zIndex: "2",
-                    height: `${result.length * 52}px`,
-                    borderRadius: "8px",
-                    boxShadow: "0px 5px 15px -5px #c8c8c8",
-                    width: "407px",
-                  }}
-                >
-                  {result.map((stock) => {
-                    return (
-                      <ResultBtn
-                        key={stock.code}
-                        onClick={() => {
-                          selectStock(stock.name, stock.code);
-                        }}
-                      >
-                        <NameContainer>{stock.name}</NameContainer>
-                        <CodeContainer>{stock.code}</CodeContainer>
-                      </ResultBtn>
-                    );
-                  })}
-                </div>
-              ) : (
-                <></>
-              )}
-            </>
+            <></>
           )}
         </>
       ) : (
         <></>
       )}
-
-      {selectedStock ? (
-        <>
+      <div style={{ position: "absolute", top: "200px", zIndex: "1" }}>
+        <FavContainer>
           {loading ? (
-            <Loading />
+            <FavBtn>
+              <img src={emptyStar} width={25} height={25} />
+            </FavBtn>
           ) : (
-            <section className={classes.frame1}>
-              <section className={classes.firstblock}>
-                <section className={classes.item}>
-                  <section className={classes.itemDetail}>
-                    <h2>{selectedStock}</h2>
-                    <h2 className={classes.itemPrice}>
-                      {selectedCodePrice[0]}
-                    </h2>
-                  </section>
-                  <section className={classes.chart}>
-                    {chartDataObj1 && <DrawChart props={chartDataObj1} />}
+            <FavBtn onClick={() => EnjoySearchHandler(selectedStock[0])}>
+              {tostr.includes(selectedStock[0]) ? (
+                <img src={filledStar} width={25} height={25} />
+              ) : (
+                <img src={emptyStar} width={25} height={25} />
+              )}
+            </FavBtn>
+          )}
+        </FavContainer>
+        <ChartContainer>
+          {loading ? (
+            <></>
+          ) : (
+            <>
+              <section className={classes.frame1}>
+                <section className={classes.firstblock}>
+                  <section className={classes.item}>
+                    <section className={classes.itemDetail}>
+                      <h2>{selectedStock}</h2>
+                      <h2 className={classes.itemPrice}>
+                        {selectedCodePrice[0]}
+                      </h2>
+                    </section>
+                    <section className={classes.chart}>
+                      {chartDataObj1 && <DrawChart props={chartDataObj1} />}
+                    </section>
                   </section>
                 </section>
               </section>
-            </section>
+            </>
           )}
-        </>
-      ) : (
-        <></>
-      )}
+        </ChartContainer>
+      </div>
     </>
   );
 }
