@@ -81,8 +81,7 @@ function SearchLayout(){
         .then(response => response.json())
         .then(data => {
             console.log(data);
-            console.log(tostr);
-            console.log("done fetch2");
+            console.log("즐겨찾기 변경 완료");
         });
 
     },[tostr]);
@@ -101,13 +100,14 @@ function SearchLayout(){
 
 
     // 검색페이지 최초 랜더링시, 즐겨찾기 목록 서버에서 가져옴.
+
     useEffect(()=>{
         fetch(`http://haniumproject.com/getUserAccount/${uuid}`)
         .then( response => response.json())
         .then( data => {
             console.log(data)
             settostr(data.favlist.split(","));
-            console.log(tostr);
+            console.log('즐겨찾기 불러오기 완료');
         });
     },[])
 

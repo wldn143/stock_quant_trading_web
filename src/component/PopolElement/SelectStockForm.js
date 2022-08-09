@@ -116,7 +116,7 @@ function SelectStockForm(){
         .then(response => response.json())
         .then(data => {
             console.log(data);
-            console.log("done fetch2");
+            console.log("즐겨찾기 추가 완료");
         });
     },[tostr])
 
@@ -130,12 +130,15 @@ function SelectStockForm(){
 
 
     // 검색페이지 최초 랜더링시, 즐겨찾기 목록 서버에서 가져옴.
+    
+
     useEffect(()=>{
         fetch(`http://haniumproject.com/getUserAccount/${uuid}`)
         .then( response => response.json())
         .then( data => {
             console.log(data)
             settostr(data.favlist.split(","));
+            console.log('즐겨찾기 불러오기 성공');
         });
 
     },[])
@@ -159,6 +162,7 @@ function SelectStockForm(){
         .then( data => {
             setsearchResultPrice(data);
             setisLoadingcart(false);
+            console.log('가격정보 불러오기 성공');
         })
 
 
@@ -241,7 +245,7 @@ function SelectStockForm(){
                     <section>
                         {stockCartStock.map((item)=>{
                             return(
-                                <li className={classes.Cartstocklist}>
+                                <li className={classes.CartStockList}>
                                     <span>{item}</span> 
                                     <button className={classes.deletebtn} onClick={()=>deleteHandler(item)}>x</button> 
                                 </li>

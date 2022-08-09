@@ -61,6 +61,7 @@ const Modal = (props) => {
     }).then(response=> response.json())
     .then( data => {
       console.log(data);
+      console.log('잔고정보 불러오기 성공');
     })
 
   },[])
@@ -110,6 +111,7 @@ const Modal = (props) => {
     .then(data => {
       console.log(data);
       SetOpenSuccess(true);
+      console.log('투자데이터 서버로 전송 성공');
     })
 
     
