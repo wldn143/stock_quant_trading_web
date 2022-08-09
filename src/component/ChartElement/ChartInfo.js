@@ -120,7 +120,7 @@ function ChartInfo() {
   const wrapperRef = useRef(null);
   useOutsideAlerter(wrapperRef);
   let stockInfo = [];
-  const [tostr, settostr] = useState(["삼성전자", "현대차"]); //즐겨찾기 목록
+  const [tostr, settostr] = useState([]); //즐겨찾기 목록
   const uuid = sessionStorage.getItem("uuid");
 
   /*SearchBar */
@@ -263,11 +263,11 @@ function ChartInfo() {
 
   useEffect(() => {
     chartData();
-    interval.current = setInterval(chartData, 3000);
+    interval.current = setInterval(chartData, 10000);
     return () => {
       clearInterval(interval.current);
     };
-  }, []);
+  }, [stockRef.current[0]]);
 
   /*차트 그리기*/
   let [chartData1, setchartData1] = useState({
