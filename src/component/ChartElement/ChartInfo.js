@@ -110,7 +110,9 @@ function ChartInfo() {
   const [selectedStock, setSelectedStock] = useState(
     state === null ? ["삼성전자", "005930"] : [state.code]
   ); //선택된 종목명,코드 배열.. 검색 페이지에서 종목 가져올 수 있음
-  const stockRef = useRef(["삼성전자", "005930"]); //3초마다 데이터 가져오기위함. 현재 선택된 종목ref
+  const stockRef = useRef(
+    state === null ? ["삼성전자", "005930"] : [state.code]
+  ); //3초마다 데이터 가져오기위함. 현재 선택된 종목ref
   const [selectedCodePrice, setSelectedCodePrice] = useState([]); //선택된 종목 현재 가격
   let [loading, setLoading] = useState(true);
   let [chartDataObj1, setchartDataObj1] = useState(null);
@@ -148,6 +150,7 @@ function ChartInfo() {
 
   //검색어처리
   const onChange = (e) => {
+    setSearchMode(true);
     setKeyword(e.target.value);
   };
   function onSearch() {
@@ -242,8 +245,8 @@ function ChartInfo() {
     fetch("http://54.215.210.171:8000/getPrice", {
       method: "POST",
       body: JSON.stringify({
-        code: stockRef.current[1],
-        start: "2022-07-10",
+        code: stockRef.current[0],
+        start: "2022-06-27",
       }),
       headers: {
         "Content-Type": "application/json",
@@ -256,10 +259,10 @@ function ChartInfo() {
         setchartData1(data);
         setLoading(false);
       });
-    console.log(stockRef.current[0]);
   };
 
   useEffect(() => {
+    chartData();
     interval.current = setInterval(chartData, 3000);
     return () => {
       clearInterval(interval.current);
@@ -297,6 +300,11 @@ function ChartInfo() {
           type="text"
           value={keyword}
           onChange={onChange}
+          onKeyPress={(e) => {
+            if (e.key === "Enter") {
+              selectStock(result[0].name, result[0].code);
+            }
+          }}
           placeholder="종목명을 입력하세요"
         />
         <DeleteBtn onClick={delKeyword} />
