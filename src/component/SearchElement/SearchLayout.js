@@ -77,25 +77,23 @@ function SearchLayout(){
 
     //  tostr 변할때마다, 변한 tostr 배열 서버에 보내기
     useEffect(()=>{
-        
-        
 
         if(afterFirstFetch){
             fetch(`http://haniumproject.com/setUserFavList`,{
-            method: 'POST',
-            body:JSON.stringify({
-                'uuid' : uuid,
-                'target' : tostr.toString()
-            }),
-            headers:{
-                'Content-Type' : 'application/json'
-            }
-        })
-        .then(response => response.json())
-        .then(data => {
-            console.log(data);
-            console.log("즐겨찾기 변경 완료");
-        });
+                method: 'POST',
+                body:JSON.stringify({
+                    'target' : tostr.toString()
+                }),
+                headers:{
+                    'Content-Type' : 'application/json',
+                    'uuid' : uuid
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                console.log(data);
+                console.log("즐겨찾기 변경 완료");
+            });
         }
         
 
@@ -119,11 +117,9 @@ function SearchLayout(){
     useEffect(()=>{
         fetch(`http://haniumproject.com/getUserAccount`,{
             method: 'POST',
-            body:JSON.stringify({
-                'uuid' : uuid
-            }),
             headers:{
-                'Content-Type' : 'application/json'
+                'Content-Type' : 'application/json',
+                'uuid' : uuid
             }
         })
         .then( response => response.json())

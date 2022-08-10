@@ -114,12 +114,12 @@ function SelectStockForm(){
     useEffect(()=>{
         fetch('http://haniumproject.com/setUserFavList',{
             method: 'POST',
-            body:{
-                'uuid' : uuid,
+            body:JSON.stringify({
                 'target' : tostr.toString()
-            },
+            }),
             headers:{
-                'Content-Type' : 'application/json'
+                'Content-Type' : 'application/json',
+                'uuid' : uuid
             }
         })
         .then(response => response.json())
@@ -144,11 +144,9 @@ function SelectStockForm(){
     useEffect(()=>{
         fetch('http://haniumproject.com/getUserAccount',{
             method: 'POST',
-            body: JSON.stringify({
-                'uuid' : uuid
-            }),
             headers: {
-                'Content-Type' : 'application/json'
+                'Content-Type' : 'application/json',
+                'uuid' : uuid
             }
         })
         .then( response => response.json())

@@ -15,11 +15,9 @@ function Enjoysearch(){
     useEffect(()=>{
         fetch('http://haniumproject.com/getUserAccount',{
             method: 'POST',
-            body:JSON.stringify({
-                'uuid' : uuid
-            }),
             headers:{
-                'Content-Type' : 'application/json'
+                'Content-Type' : 'application/json',
+                'uuid' : uuid
             }
         })
         .then( response => response.json())
@@ -35,21 +33,24 @@ function Enjoysearch(){
     // 즐겨찾기 리스트 가격 받아오기
 
     useEffect(()=>{
+        
+        if(tostr.length !== 0){
+            fetch('http://54.215.210.171:8000/getPreview',{
+                method: 'POST',
+                body:JSON.stringify({
+                    code: tostr.slice(undefined,3)
+                }),
+                headers:{
+                    'Content-Type' : './application.json'
+                }
+            }).then( response => response.json())
+            .then( data => {
+                settostrPrice(data);
+                console.log('즐겨찾기 가격들 불러오기 성공');
 
-        fetch('http://54.215.210.171:8000/getPreview',{
-            method: 'POST',
-            body:JSON.stringify({
-                code: tostr.slice(undefined,3)
-            }),
-            headers:{
-                'Content-Type' : './application.json'
-            }
-        }).then( response => response.json())
-        .then( data => {
-            settostrPrice(data);
-            console.log('즐겨찾기 가격들 불러오기 성공');
-
-        })
+            })
+        }
+        
     }, [tostr]);
     
 
