@@ -13,7 +13,9 @@ import {useNavigate} from 'react-router-dom';
 const Modal = (props) => {
   
   const { open, close, strategy, cartlist } = props;
-  const [balance, Setbalance] = useState(null);
+
+  const balance = sessionStorage.getItem('balance');
+  
   const amount = useRef();
   const navigate = useNavigate();
   
@@ -37,36 +39,6 @@ const Modal = (props) => {
     SetOpenSuccess(false);
     navigate('/home/balance');    // 성공모달 닫힐때, 잔고페이지로 이동
   }
-
-
-
-
-  /* balance에 dummy data 로 테스트 */
-
-  useEffect(()=>{
-    Setbalance(150000);
-  })
-  
-
-  /* 서버에서 잔고정보를 받아오기위한 fetch */
-  
-  useEffect(()=>{
-    
-    
-    fetch('http://haniumproject.com/getUserAccount',{
-      method: 'POST',
-      headers:{
-        'Content-Type' : 'application/json',
-        'uuid' : uuid
-      }
-    }).then(response=> response.json())
-    .then( data => {
-      console.log(data);
-      console.log('잔고정보 불러오기 성공');
-    })
-
-  },[])
-
 
 
 

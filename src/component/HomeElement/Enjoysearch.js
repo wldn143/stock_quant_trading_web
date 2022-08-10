@@ -24,6 +24,7 @@ function Enjoysearch(){
         .then( data => {
             console.log(data)
             settostr(data.favlist.split(",").slice(0,3));
+            sessionStorage.setItem('balance', data.quantity);
             console.log('즐겨찾기 불러오기 성공');
             
         });
