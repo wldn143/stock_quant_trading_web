@@ -38,6 +38,8 @@ function PopolForm(){
 
     const navigate = useNavigate();
 
+    const uuid = sessionStorage.getItem('uuid');
+
     let [sttData, setsttData] = useState(null);         // 전략종류 저장하는 변수
     let [Clicked, setClicked] = useState([0,0]);  
     let [sttList, setsttList] = useState([]);      
@@ -83,7 +85,15 @@ function PopolForm(){
     // 전략종류 받아오는 API
 
     useEffect(()=>{
-        fetch('http://haniumproject.com/getModelInfo')
+        fetch('http://haniumproject.com/getModelInfo',{
+            method: 'POST',
+            body:JSON.stringify({
+                'uuid': uuid
+            }),
+            headers:{
+                'Content-Type': 'application/json'
+            }
+        })
         .then(response=> response.json())
         .then(data => {
             setsttList(data);

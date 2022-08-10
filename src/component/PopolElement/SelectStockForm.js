@@ -112,7 +112,16 @@ function SelectStockForm(){
     // tostr배열 변경될때 마다, 서버로 변경된 배열 보내기
 
     useEffect(()=>{
-        fetch(`http://haniumproject.com/setUserFavList/${uuid}/${tostr}`)
+        fetch('http://haniumproject.com/setUserFavList',{
+            method: 'POST',
+            body:{
+                'uuid' : uuid,
+                'target' : tostr.toString()
+            },
+            headers:{
+                'Content-Type' : 'application/json'
+            }
+        })
         .then(response => response.json())
         .then(data => {
             console.log(data);
@@ -133,7 +142,15 @@ function SelectStockForm(){
     
 
     useEffect(()=>{
-        fetch(`http://haniumproject.com/getUserAccount/${uuid}`)
+        fetch('http://haniumproject.com/getUserAccount',{
+            method: 'POST',
+            body: JSON.stringify({
+                'uuid' : uuid
+            }),
+            headers: {
+                'Content-Type' : 'application/json'
+            }
+        })
         .then( response => response.json())
         .then( data => {
             console.log(data)

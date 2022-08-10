@@ -36,6 +36,7 @@ function SearchLayout(){
     const navigate = useNavigate();
 
     const [isLoading, setisLoading] = useState(false);
+    const [afterFirstFetch, setafterFirstFetch] = useState(false);
 
     const uuid = sessionStorage.getItem('uuid');        // uuid sessionStorage에서 불러오기
 
@@ -67,7 +68,7 @@ function SearchLayout(){
     function EnjoySearchHandler(item){           
 
         if(!tostr.includes(item)){      
-            settostr([...tostr, item]); 
+            settostr([item, ...tostr]); 
         }
         else{
             settostr(tostr.filter(x=> x !== item))
@@ -76,13 +77,27 @@ function SearchLayout(){
 
     //  tostr 변할때마다, 변한 tostr 배열 서버에 보내기
     useEffect(()=>{
+        
+        
 
-        fetch(`http://haniumproject.com/setUserFavList/${uuid}/${tostr}`)
+        if(afterFirstFetch){
+            fetch(`http://haniumproject.com/setUserFavList`,{
+            method: 'POST',
+            body:JSON.stringify({
+                'uuid' : uuid,
+                'target' : tostr.toString()
+            }),
+            headers:{
+                'Content-Type' : 'application/json'
+            }
+        })
         .then(response => response.json())
         .then(data => {
             console.log(data);
             console.log("즐겨찾기 변경 완료");
         });
+        }
+        
 
     },[tostr]);
 
@@ -102,12 +117,21 @@ function SearchLayout(){
     // 검색페이지 최초 랜더링시, 즐겨찾기 목록 서버에서 가져옴.
 
     useEffect(()=>{
-        fetch(`http://haniumproject.com/getUserAccount/${uuid}`)
+        fetch(`http://haniumproject.com/getUserAccount`,{
+            method: 'POST',
+            body:JSON.stringify({
+                'uuid' : uuid
+            }),
+            headers:{
+                'Content-Type' : 'application/json'
+            }
+        })
         .then( response => response.json())
         .then( data => {
             console.log(data)
             settostr(data.favlist.split(","));
             console.log('즐겨찾기 불러오기 완료');
+            setafterFirstFetch(true);
         });
     },[])
 

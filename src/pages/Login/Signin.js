@@ -43,6 +43,7 @@ function SigninPage(){
             })
         }).then( response => response.json())
         .then( (data) => {
+            console.log(data);
             sessionStorage.setItem('uuid', data.uuid);
             sessionStorage.setItem('name', data.name);
 

@@ -126,6 +126,11 @@ function ChartInfo() {
   let stockCodes = sessionStorage.getItem("StockCodes");
   stockNames = stockNames.split(",");
   stockCodes = stockCodes.split(",");
+
+
+  const [afterFirstFetch, setafterFirstFetch] = useState(false);
+
+
   /*SearchBar */
 
   useEffect(() => {
@@ -210,27 +215,52 @@ function ChartInfo() {
   /* 즐겨찾기 */
   //유저의 즐겨찾기 목록 가져오기
   useEffect(() => {
-    fetch(`http://haniumproject.com/getUserAccount/${uuid}`)
+    fetch(`http://haniumproject.com/getUserAccount`,{
+      method: 'POST',
+      body: JSON.stringify({
+        'uuid' : uuid
+      }),
+      headers:{
+        'Content-Type' : 'application/json'
+      }
+    })
       .then((response) => response.json())
       .then((data) => {
+        console.log(data);
         settostr(data.favlist.split(","));
+        setafterFirstFetch(true);
       });
   }, []);
 
   //tostr 서버에 전송?
   useEffect(() => {
-    fetch(`http://haniumproject.com/setUserFavList/${uuid}/${tostr}`).then(
-      (response) => response.json()
-    );
+    if(afterFirstFetch){
+      fetch(`http://haniumproject.com/setUserFavList`,{
+        method: 'POST',
+        body: JSON.stringify({
+          'uuid' : uuid,
+          'target' : tostr.toString()
+        }),
+        headers:{
+          'Content-Type' : 'application/json'
+        }
+      }).then(
+        (response) => response.json()
+      ).then( data =>{
+        console.log(tostr);
+      });
+    }
   }, [tostr]);
 
   //즐겨찾기 버튼 클릭시
   function EnjoySearchHandler(e) {
     if (!tostr.includes(e)) {
-      settostr([...tostr, e]);
+      settostr([e, ...tostr]);
     } else {
       settostr(tostr.filter((x) => x !== e));
     }
+
+    console.log(tostr);
   }
   /*Chart*/
 

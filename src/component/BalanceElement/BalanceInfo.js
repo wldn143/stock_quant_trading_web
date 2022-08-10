@@ -10,7 +10,15 @@ function BalanceInfo() {
   const uuid = sessionStorage.getItem("uuid");
 
   useEffect(() => {
-    fetch(`http://haniumproject.com/getUserAccount/${uuid}`)
+    fetch(`http://haniumproject.com/getUserAccount/`,{
+      method: 'POST',
+      body: JSON.stringify({
+        'uuid' : uuid
+      }),
+      headers:{
+        'Content-Type' : 'application/json'
+      }
+    })
       .then((response) => response.json())
       .then((data) => {
         setTotalAssets(data.total);
