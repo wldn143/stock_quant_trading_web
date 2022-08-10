@@ -53,11 +53,12 @@ const Modal = (props) => {
   useEffect(()=>{
     
     
-    fetch('https://stock-a95d6-default-rtdb.firebaseio.com/.json',{
+    fetch('http://haniumproject.com/getUserAccount',{
       method: 'POST',
-      body:JSON.stringify({
-        'uuid' : {uuid}
-      })
+      headers:{
+        'Content-Type' : 'application/json',
+        'uuid' : uuid
+      }
     }).then(response=> response.json())
     .then( data => {
       console.log(data);

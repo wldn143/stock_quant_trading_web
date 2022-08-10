@@ -87,11 +87,9 @@ function PopolForm(){
     useEffect(()=>{
         fetch('http://haniumproject.com/getModelInfo',{
             method: 'POST',
-            body:JSON.stringify({
-                'uuid': uuid
-            }),
             headers:{
-                'Content-Type': 'application/json'
+                'Content-Type': 'application/json',
+                'uuid' : uuid
             }
         })
         .then(response=> response.json())
