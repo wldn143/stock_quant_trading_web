@@ -13,7 +13,15 @@ function Enjoysearch(){
     // 즐겨찾기 리스트 받아오기
 
     useEffect(()=>{
-        fetch(`http://haniumproject.com/getUserAccount/${uuid}`)
+        fetch('http://haniumproject.com/getUserAccount',{
+            method: 'POST',
+            body:JSON.stringify({
+                'uuid' : uuid
+            }),
+            headers:{
+                'Content-Type' : 'application/json'
+            }
+        })
         .then( response => response.json())
         .then( data => {
             console.log(data)
