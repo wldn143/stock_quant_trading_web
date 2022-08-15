@@ -13,7 +13,7 @@ const Title = styled.div`
   justify-content: center;
 `;
 const Contents = styled.div`
-  width: 40%;
+  width: 45%;
   margin-left: 20px;
   display: flex;
   flex-direction: column;
@@ -21,7 +21,7 @@ const Contents = styled.div`
 `;
 function ChartPage() {
   return (
-    <div>
+    <>
       <AfterLogin>
         <Layout>
           <Title>
@@ -34,7 +34,7 @@ function ChartPage() {
           </Contents>
         </Layout>
       </AfterLogin>
-    </div>
+    </>
   );
 }
 
