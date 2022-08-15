@@ -13,6 +13,7 @@ function Enjoysearch(){
     // 즐겨찾기 리스트 받아오기
 
     useEffect(()=>{
+        console.log(uuid);
         fetch('http://haniumproject.com/getUserAccount',{
             method: 'POST',
             headers:{
