@@ -6,7 +6,7 @@ import styled from "styled-components";
 import filledStar from "./filledStar.png";
 import emptyStar from "./emptyStar.png";
 import { useLocation } from "react-router-dom";
-import DrawMonthChart from "./DrawMonthChart";
+
 //로딩중에 검색어 입력하면 filter useEffect 처리 안됨
 //차트 3초마다, selectedstock이 바뀌면 리렌더링
 const SearchBar = styled.div`
@@ -80,43 +80,40 @@ const FavContainer = styled.div`
   border: 1px solid #e3e3e3;
   align-items: center;
   justify-content: end;
+  background-color: pink;
 `;
 const FavBtn = styled.button`
   cursor: pointer;
   border: none;
-  background-color: transparent;
+  background-color: red;
   padding-top: 3px;
   &:hover {
     background-color: #f2f2f2;
     border-radius: 5px;
   }
 `;
+const MinChartBtn = styled.button`
+  height: 100%;
+  width: 50px;
+  cursor: pointer;
+  border: none;
+  background-color: ${(props) => (props.danger ? "#e74c3c" : "2ecc71")};
+`;
 const ChartContainer = styled.div`
   border: 1px solid #e3e3e3;
   border-top: none;
-  height: 400px;
+  height: 500px;
   width: 700px;
   display: flex;
   justify-content: center;
-  align-items: center;
-`;
-const StockTitle = styled.div`
-  height: 50px;
-  width: 400px;
-  .stockName {
-    height: 30px;
-    font-size: 25px;
-    font-weight: 600;
-  }
-  .stockCode {
-    height: 20px;
-    color: #909090;
-  }
 `;
 
 function ChartInfo() {
   const [keyword, setKeyword] = useState(""); //검색키워드
   const [result, setResult] = useState(); //검색된 키워드를 포함하는 종목 배열(자동완성 리스트)
+  //const [nameToCode, setNameToCode] = useState([]); //{종목명:코드} 객체
+  //const [stockNames, setStockNames] = useState([]); //종목명 배열
+  //const [stockCodes, setStockCodes] = useState([]); //코드 배열
   const { state } = useLocation();
   const [selectedStock, setSelectedStock] = useState(
     state === null ? ["삼성전자", "005930"] : [state.code]
@@ -137,17 +134,39 @@ function ChartInfo() {
   let stockCodes = sessionStorage.getItem("StockCodes");
   stockNames = stockNames.split(",");
   stockCodes = stockCodes.split(",");
-  let [stockChange, setStockChange] = useState(false);
-
-  const [afterFirstFetch, setafterFirstFetch] = useState(false);
+  const [minBtnActive, setMinBtnActive] = useState("");
+  const [dayBtnActive, setDayBtnActive] = useState("active");
 
   /*SearchBar */
-  //전체 종목명, 코드 데이터 받아오기
+
   useEffect(() => {
     for (let i = 0; i < stockNames.length; i++) {
       stockInfo[i] = { name: stockNames[i], code: stockCodes[i] };
     }
   }, []);
+
+  //전체 종목명, 코드 데이터 받아오기
+  // useEffect(() => {
+  //   if (
+  //     nameToCode.length === 0 ||
+  //     stockCodes.length === 0 ||
+  //     stockNames.length === 0
+  //   ) {
+  //     setLoading(true);
+  //     fetch(`http://54.215.210.171:8000/getNameToCode`)
+  //       .then((response) => response.json())
+  //       .then((data) => {
+  //         setNameToCode(data);
+  //         setStockNames(Object.keys(nameToCode)); //전체 종목명 배열
+  //         setStockCodes(Object.values(nameToCode)); //전체 코드 배열
+  //       });
+  //   } else {
+  //     for (let i = 0; i < stockNames.length; i++) {
+  //       stockInfo[i] = { name: stockNames[i], code: stockCodes[i] };
+  //     }
+  //     setLoading(false);
+  //   }
+  // });
 
   //검색어처리
   const onChange = (e) => {
@@ -175,11 +194,11 @@ function ChartInfo() {
 
   //종목 선택
   function selectStock(n, c) {
-    setStockChange(true);
     setKeyword("");
     setSearchMode(false);
     setSelectedStock([n, c]);
     stockRef.current = [n, c];
+    //새로고침 후에 기존검색 내역 가지고가기
   }
 
   //검색창클릭시에만 검색 컨테이너 표시
@@ -202,88 +221,69 @@ function ChartInfo() {
   /* 즐겨찾기 */
   //유저의 즐겨찾기 목록 가져오기
   useEffect(() => {
-    fetch(`http://haniumproject.com/getUserAccount`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        uuid: uuid,
-      },
-    })
+    fetch(`http://haniumproject.com/getUserAccount/${uuid}`)
       .then((response) => response.json())
       .then((data) => {
-        console.log(data);
         settostr(data.favlist.split(","));
-        setafterFirstFetch(true);
       });
   }, []);
 
   //tostr 서버에 전송?
   useEffect(() => {
-    if (afterFirstFetch) {
-      fetch(`http://haniumproject.com/setUserFavList`, {
-        method: "POST",
-        body: JSON.stringify({
-          target: tostr.toString(),
-        }),
-        headers: {
-          "Content-Type": "application/json",
-          uuid: uuid,
-        },
-      }).then((response) => response.json());
-    }
+    fetch(`http://haniumproject.com/setUserFavList/${uuid}/${tostr}`).then(
+      (response) => response.json()
+    );
   }, [tostr]);
 
   //즐겨찾기 버튼 클릭시
   function EnjoySearchHandler(e) {
     if (!tostr.includes(e)) {
-      settostr([e, ...tostr]);
+      settostr([...tostr, e]);
     } else {
       settostr(tostr.filter((x) => x !== e));
     }
-
-    console.log(tostr);
   }
   /*Chart*/
 
   const interval = useRef(null);
   const chartData = () => {
+    fetch("http://54.215.210.171:8000/getPreview", {
+      method: "POST",
+      body: JSON.stringify({
+        code: [stockRef.current[0]],
+      }),
+      headers: {
+        "Content-Type": "./application.json",
+      },
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        setSelectedCodePrice(data);
+      });
+
     //차트 데이터 받아오기
-    // fetch("http://54.215.210.171:8000/getPrice", {
-    //   method: "POST",
-    //   body: JSON.stringify({
-    //     code: stockRef.current[0],
-    //     start: "2022-06-27",
-    //   }),
-    //   headers: {
-    //     "Content-Type": "application/json",
-    //   },
-    // })
-    //   .then((response) => {
-    //     return response.json();
-    //   })
-    //   .then((data) => {
-    //     setchartData1(data);
-    //   });
-    // fetch("http://54.215.210.171:8000/getPreview", {
-    //   method: "POST",
-    //   body: JSON.stringify({
-    //     code: [stockRef.current[0]],
-    //   }),
-    //   headers: {
-    //     "Content-Type": "./application.json",
-    //   },
-    // })
-    //   .then((response) => response.json())
-    //   .then((data) => {
-    //     setSelectedCodePrice(data);
-    //     setLoading(false);
-    //   });
-    setLoading(false);
+    fetch("http://54.215.210.171:8000/getPrice", {
+      method: "POST",
+      body: JSON.stringify({
+        code: stockRef.current[0],
+        start: "2022-06-27",
+      }),
+      headers: {
+        "Content-Type": "application/json",
+      },
+    })
+      .then((response) => {
+        return response.json();
+      })
+      .then((data) => {
+        setchartData1(data);
+        setLoading(false);
+      });
   };
 
   useEffect(() => {
     chartData();
-    interval.current = setInterval(setLoading(true), chartData, 10000);
+    interval.current = setInterval(chartData, 10000);
     return () => {
       clearInterval(interval.current);
     };
@@ -291,7 +291,6 @@ function ChartInfo() {
 
   /*차트 그리기*/
   let [chartData1, setchartData1] = useState({
-    //서버에서 받아온 차트데이터
     Open: { keys: "values" },
     High: { keys: "values" },
     Low: { keys: "values" },
@@ -366,62 +365,60 @@ function ChartInfo() {
       ) : (
         <></>
       )}
-      <div
-        style={{
-          position: "absolute",
-          top: "200px",
-          zIndex: "1",
-          marginTop: "20px",
-        }}
-      >
+      <div style={{ position: "absolute", top: "200px", zIndex: "1" }}>
         <FavContainer>
           {loading ? (
             <FavBtn>
-              <Loading />
+              <img src={emptyStar} width={25} height={25} />
             </FavBtn>
           ) : (
-            <FavBtn onClick={() => EnjoySearchHandler(selectedStock[0])}>
-              {tostr.includes(selectedStock[0]) ? (
-                <img src={filledStar} width={25} height={25} />
-              ) : (
-                <img src={emptyStar} width={25} height={25} />
-              )}
-            </FavBtn>
+            <>
+              <MinChartBtn
+                className={minBtnActive === "active" ? "active" : ""}
+              >
+                분
+              </MinChartBtn>
+              <MinChartBtn
+                onClick={() => {
+                  setDayBtnActive("active");
+                  console.log(dayBtnActive);
+                }}
+                className={dayBtnActive === "active" ? "active" : ""}
+              >
+                일
+              </MinChartBtn>
+              <FavBtn onClick={() => EnjoySearchHandler(selectedStock[0])}>
+                {tostr.includes(selectedStock[0]) ? (
+                  <img src={filledStar} width={25} height={25} />
+                ) : (
+                  <img src={emptyStar} width={25} height={25} />
+                )}
+              </FavBtn>
+            </>
           )}
         </FavContainer>
         <ChartContainer>
-          <>
-            {/* 일봉 차트 
-              <section className={classes.item}>
-                <section className={classes.itemDetail}>
-                  <StockTitle>
-                    <div className="stockName">{selectedStock[0]}</div>
-
-                    <div className="stockCode">{selectedStock[1]}</div>
-                  </StockTitle>
-                  <h2 className={classes.itemPrice}>{selectedCodePrice[0]}</h2>
+          {loading ? (
+            <></>
+          ) : (
+            <>
+              <section className={classes.frame1}>
+                <section className={classes.firstblock}>
+                  <section className={classes.item}>
+                    <section className={classes.itemDetail}>
+                      <h2>{selectedStock}</h2>
+                      <h2 className={classes.itemPrice}>
+                        {selectedCodePrice[0]}
+                      </h2>
+                    </section>
+                    <section className={classes.chart}>
+                      {chartDataObj1 && <DrawChart props={chartDataObj1} />}
+                    </section>
+                  </section>
                 </section>
-                <section className={classes.chart}>
-                  <DrawChart props={chartDataObj1} />
-                </section>
-              </section> */}
-
-            {/*월봉차트 */}
-            <h3>월봉</h3>
-            <section className={classes.item}>
-              <section className={classes.itemDetail}>
-                <StockTitle>
-                  <div className="stockName">{selectedStock[0]}</div>
-
-                  <div className="stockCode">{selectedStock[1]}</div>
-                </StockTitle>
-                <h2 className={classes.itemPrice}>{selectedCodePrice[0]}</h2>
               </section>
-              <section className={classes.chart}>
-                <DrawMonthChart props={chartDataObj1} />
-              </section>
-            </section>
-          </>
+            </>
+          )}
         </ChartContainer>
       </div>
     </>
