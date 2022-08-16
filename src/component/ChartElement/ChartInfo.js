@@ -3,10 +3,12 @@ import classes from "./Chart.module.css";
 import DrawChart from "../HomeElement/DrawChart";
 import Loading from "../layout/Loading2";
 import styled from "styled-components";
-import filledStar from "./filledStar.png";
-import emptyStar from "./emptyStar.png";
+import filledStar from "./image/filledStar.png";
+import emptyStar from "./image/emptyStar.png";
 import { useLocation } from "react-router-dom";
 import DrawMonthChart from "./DrawMonthChart";
+import DayChart from "./DayChart";
+import MonthChart from "./MonthChart";
 //로딩중에 검색어 입력하면 filter useEffect 처리 안됨
 //차트 3초마다, selectedstock이 바뀌면 리렌더링
 const SearchBar = styled.div`
@@ -16,7 +18,7 @@ const SearchBar = styled.div`
   border: none;
   border-radius: 8px;
   font-size: 17px;
-  background-image: url(${require("./searchIcon.png")});
+  background-image: url(${require("./image/searchIcon.png")});
   background-position: 13px center;
   background-size: 25px;
   background-repeat: no-repeat;
@@ -36,7 +38,7 @@ const InputBox = styled.input`
 const DeleteBtn = styled.button`
   width: 25px;
   height: 42px;
-  background-image: url(${require("./close.png")});
+  background-image: url(${require("./image/close.png")});
   border: none;
   background-size: 20px;
   background-repeat: no-repeat;
@@ -91,6 +93,16 @@ const FavBtn = styled.button`
     border-radius: 5px;
   }
 `;
+const ChartSelectBtn = styled.button`
+  height: 100%;
+  width: 50px;
+  cursor: pointer;
+  border: none;
+  &:minActive{
+    bacground-color:red;
+  }
+  .
+  `;
 const ChartContainer = styled.div`
   border: 1px solid #e3e3e3;
   border-top: none;
@@ -99,19 +111,6 @@ const ChartContainer = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-`;
-const StockTitle = styled.div`
-  height: 50px;
-  width: 400px;
-  .stockName {
-    height: 30px;
-    font-size: 25px;
-    font-weight: 600;
-  }
-  .stockCode {
-    height: 20px;
-    color: #909090;
-  }
 `;
 
 function ChartInfo() {
@@ -138,7 +137,7 @@ function ChartInfo() {
   stockNames = stockNames.split(",");
   stockCodes = stockCodes.split(",");
   let [stockChange, setStockChange] = useState(false);
-
+  const [chartType, setChartType] = useState("month");
   const [afterFirstFetch, setafterFirstFetch] = useState(false);
 
   /*SearchBar */
@@ -312,6 +311,18 @@ function ChartInfo() {
     parsing1();
   }, [chartData1]);
 
+  const handleChartType = (e) => {
+    const name = e.target.name;
+    setChartType(name);
+  };
+
+  const selectChartType = {
+    day: <DayChart props={[selectedStock, selectedCodePrice, chartDataObj1]} />,
+    month: (
+      <MonthChart props={[selectedStock, selectedCodePrice, chartDataObj1]} />
+    ),
+  };
+
   return (
     <>
       <SearchBar>
@@ -376,53 +387,46 @@ function ChartInfo() {
       >
         <FavContainer>
           {loading ? (
-            <FavBtn>
-              <Loading />
-            </FavBtn>
-          ) : (
-            <FavBtn onClick={() => EnjoySearchHandler(selectedStock[0])}>
-              {tostr.includes(selectedStock[0]) ? (
-                <img src={filledStar} width={25} height={25} />
-              ) : (
+            <>
+              <ChartSelectBtn onClick={handleChartType} name="day">
+                일
+              </ChartSelectBtn>
+              <ChartSelectBtn onClick={handleChartType} name="month">
+                월
+              </ChartSelectBtn>
+              <FavBtn onClick={() => EnjoySearchHandler(selectedStock[0])}>
+                {tostr.includes(selectedStock[0]) ? (
+                  <img src={filledStar} width={25} height={25} />
+                ) : (
+                  <img src={emptyStar} width={25} height={25} />
+                )}
+              </FavBtn>
+              {/* <FavBtn>
                 <img src={emptyStar} width={25} height={25} />
-              )}
-            </FavBtn>
+              </FavBtn> */}
+            </>
+          ) : (
+            <>
+              <ChartSelectBtn onClick={handleChartType} name="day">
+                일
+              </ChartSelectBtn>
+              <ChartSelectBtn onClick={handleChartType} name="month">
+                월
+              </ChartSelectBtn>
+              <FavBtn onClick={() => EnjoySearchHandler(selectedStock[0])}>
+                {tostr.includes(selectedStock[0]) ? (
+                  <img src={filledStar} width={25} height={25} />
+                ) : (
+                  <img src={emptyStar} width={25} height={25} />
+                )}
+              </FavBtn>
+            </>
           )}
         </FavContainer>
-        <ChartContainer>
-          <>
-            {/* 일봉 차트 
-              <section className={classes.item}>
-                <section className={classes.itemDetail}>
-                  <StockTitle>
-                    <div className="stockName">{selectedStock[0]}</div>
 
-                    <div className="stockCode">{selectedStock[1]}</div>
-                  </StockTitle>
-                  <h2 className={classes.itemPrice}>{selectedCodePrice[0]}</h2>
-                </section>
-                <section className={classes.chart}>
-                  <DrawChart props={chartDataObj1} />
-                </section>
-              </section> */}
-
-            {/*월봉차트 */}
-            <h3>월봉</h3>
-            <section className={classes.item}>
-              <section className={classes.itemDetail}>
-                <StockTitle>
-                  <div className="stockName">{selectedStock[0]}</div>
-
-                  <div className="stockCode">{selectedStock[1]}</div>
-                </StockTitle>
-                <h2 className={classes.itemPrice}>{selectedCodePrice[0]}</h2>
-              </section>
-              <section className={classes.chart}>
-                <DrawMonthChart props={chartDataObj1} />
-              </section>
-            </section>
-          </>
-        </ChartContainer>
+        {selectedStock && (
+          <ChartContainer>{selectChartType[chartType]}</ChartContainer>
+        )}
       </div>
     </>
   );
