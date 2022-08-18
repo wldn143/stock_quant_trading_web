@@ -4,11 +4,11 @@ function DrawMonthChart({ props }) {
   const totalArr = [["date", "", "", "", ""]];
   const MonthChartArr = [["date", "", "", "", ""]];
   /* 실제 데이터배열 받아오기 */
-  //   const dateArr = props.date;
-  //   const openArr = props.open;
-  //   const highArr = props.high;
-  //   const lowArr = props.low;
-  //   const closeArr = props.close;
+  const dateArr = props.date;
+  const openArr = props.open;
+  const highArr = props.high;
+  const lowArr = props.low;
+  const closeArr = props.close;
 
   let dummyData = [
     ["2022-06-27", 59900, 59000, 58800, 58300],
@@ -48,17 +48,17 @@ function DrawMonthChart({ props }) {
     ["2022-08-12", 60700, 59500, 60200, 59400],
   ];
 
-  //   for (let i = 0; i < dateArr.length; i++) {
-  //     totalArr.push([dateArr[i], highArr[i], openArr[i], closeArr[i], lowArr[i]]);
-  //   }
+  for (let i = 0; i < dateArr.length; i++) {
+    totalArr.push([dateArr[i], highArr[i], openArr[i], closeArr[i], lowArr[i]]);
+  }
   function compareNum(a, b) {
     return a - b;
   }
 
-  for (let j = 0; j < dummyData.length; j++) {
-    let curMonth = dummyData[j + 1][0].slice(0, 7); //시작하는 달의 문자열 추출
+  for (let j = 0; j < totalArr.length; j++) {
+    let curMonth = totalArr[j + 1][0].slice(0, 7); //시작하는 달의 문자열 추출
 
-    let curMonthDataArr = dummyData.filter(
+    let curMonthDataArr = totalArr.filter(
       (data) => data[0].slice(0, 7) === curMonth
     );
     let length = curMonthDataArr.length - 1;
