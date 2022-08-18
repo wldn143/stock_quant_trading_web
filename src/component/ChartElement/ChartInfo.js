@@ -247,37 +247,36 @@ function ChartInfo() {
   const interval = useRef(null);
   const chartData = () => {
     //차트 데이터 받아오기
-    // fetch("http://54.215.210.171:8000/getPrice", {
-    //   method: "POST",
-    //   body: JSON.stringify({
-    //     code: stockRef.current[0],
-    //     start: "2022-06-27",
-    //   }),
-    //   headers: {
-    //     "Content-Type": "application/json",
-    //   },
-    // })
-    //   .then((response) => {
-    //     return response.json();
-    //   })
-    //   .then((data) => {
-    //     setchartData1(data);
-    //   });
-    // fetch("http://54.215.210.171:8000/getPreview", {
-    //   method: "POST",
-    //   body: JSON.stringify({
-    //     code: [stockRef.current[0]],
-    //   }),
-    //   headers: {
-    //     "Content-Type": "./application.json",
-    //   },
-    // })
-    //   .then((response) => response.json())
-    //   .then((data) => {
-    //     setSelectedCodePrice(data);
-    //     setLoading(false);
-    //   });
-    setLoading(false);
+    fetch("http://54.215.210.171:8000/getPrice", {
+      method: "POST",
+      body: JSON.stringify({
+        code: stockRef.current[0],
+        start: "2022-06-27",
+      }),
+      headers: {
+        "Content-Type": "application/json",
+      },
+    })
+      .then((response) => {
+        return response.json();
+      })
+      .then((data) => {
+        setchartData1(data);
+      });
+    fetch("http://54.215.210.171:8000/getPreview", {
+      method: "POST",
+      body: JSON.stringify({
+        code: [stockRef.current[0]],
+      }),
+      headers: {
+        "Content-Type": "./application.json",
+      },
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        setSelectedCodePrice(data);
+        setLoading(false);
+      });
   };
 
   useEffect(() => {
@@ -423,10 +422,9 @@ function ChartInfo() {
             </>
           )}
         </FavContainer>
-
-        {selectedStock && (
-          <ChartContainer>{selectChartType[chartType]}</ChartContainer>
-        )}
+        <ChartContainer>
+          {loading !== true && <>{selectChartType[chartType]}</>}
+        </ChartContainer>
       </div>
     </>
   );
