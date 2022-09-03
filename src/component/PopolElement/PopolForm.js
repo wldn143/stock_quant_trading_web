@@ -85,11 +85,11 @@ function PopolForm(){
     // 전략종류 받아오는 API
 
     useEffect(()=>{
-        fetch('http://haniumproject.com/getModelInfo',{
+        fetch('http://haniumproject.com:8000/getModelInfo',{
             method: 'POST',
             headers:{
                 'Content-Type': 'application/json',
-                'uuid' : uuid
+                'Authorization' : `Bearer ${uuid}`
             }
         })
         .then(response=> response.json())
